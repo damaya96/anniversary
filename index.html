@@ -538,9 +538,87 @@
   @media (max-width: 480px){
     .stack-wrap{ width: 84vw; height: 84vw; max-height: 48vh; }
   }
+
+  /* ---------- Password gate ---------- */
+  #gate{
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+    padding: 8vh 7vw;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #gate.hidden{
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .gate-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 360px;
+  }
+  .gate-label{
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 22px;
+    opacity: 0.85;
+  }
+  .gate-title{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 5vw, 34px);
+    color: var(--cream);
+    margin-bottom: 32px;
+    line-height: 1.3;
+  }
+  .gate-title em{ color: var(--rose); font-style: italic; }
+  .gate-input{
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3vw, 26px);
+    text-align: center;
+    padding: 6px 4px 10px;
+    width: min(70vw, 280px);
+    letter-spacing: 0.08em;
+    outline: none;
+    transition: border-color 0.4s ease;
+  }
+  .gate-input::placeholder{ color: var(--cream-dim); opacity: 0.4; font-style: italic; }
+  .gate-input:focus{ border-color: var(--rose); }
+  .gate-error{
+    margin-top: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--rose);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .gate-error.show{ opacity: 0.9; }
 </style>
 </head>
 <body>
+
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-label">For your eyes only</div>
+    <div class="gate-title">This is just for <em>us</em>.</div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="our word" autocomplete="off" />
+    <div class="gate-error" id="gateError">try again, love</div>
+  </div>
+</div>
 
 <div class="stage">
   <div class="grain"></div>
@@ -586,6 +664,43 @@
 </div>
 
 <script>
+/* =========================================================
+   PASSWORD GATE — set the real password before sharing the link.
+   This is NOT real security (anyone could view-source and read it) —
+   it's just a speed bump against randoms with the link, search
+   crawlers, and casual browsing. Good enough for a private moment,
+   not for anything truly sensitive.
+   ========================================================= */
+const GATE_PASSWORD = "changeme"; // <-- set this to your real password before sharing
+
+const gate = document.getElementById('gate');
+const gateInput = document.getElementById('gateInput');
+const gateError = document.getElementById('gateError');
+
+function tryUnlock(){
+  const entered = gateInput.value.trim().toLowerCase();
+  if (entered === GATE_PASSWORD.trim().toLowerCase()) {
+    gate.classList.add('hidden');
+    sessionStorage.setItem('gate-unlocked', '1');
+  } else {
+    gateError.classList.add('show');
+    gateInput.value = '';
+    gateInput.focus();
+  }
+}
+
+gateInput.addEventListener('keydown', (e) => {
+  gateError.classList.remove('show');
+  if (e.key === 'Enter') tryUnlock();
+});
+
+// stay unlocked if he already entered it once this session (e.g. refreshes the page)
+if (sessionStorage.getItem('gate-unlocked') === '1') {
+  gate.classList.add('hidden');
+}
+
+gateInput.focus();
+
 /* =========================================================
    EDIT THIS DATA TO PERSONALIZE
    - photo: path/URL to an image, or leave "" for placeholder
