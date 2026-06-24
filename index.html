@@ -627,7 +627,7 @@ function popHeart(x, y, opts){
   heartLayer.appendChild(el);
   const driftX = (Math.random()*70 - 35);
   const rot = (Math.random()*30 - 15);
-  const riseDistance = opts.rise || (window.innerHeight * 0.85 + Math.random() * window.innerHeight * 0.25);
+  const riseDistance = opts.rise || 100;
   requestAnimationFrame(() => {
     el.style.opacity = String(0.9 + Math.random()*0.1);
     el.style.transform = `translate(${driftX}px, -${riseDistance}px) scale(1) rotate(${rot}deg)`;
@@ -676,13 +676,7 @@ function ambientHeart(){
   for (let i = 0; i < count; i++){
     const x = Math.random() * window.innerWidth;
     const y = window.innerHeight + 30;
-    setTimeout(() => popHeart(x, y, { size: 26 + Math.random()*18, life: 6500 }), i * 280);
-  }
-  const bubbleCount = Math.random() < 0.85 ? (Math.random() < 0.3 ? 2 : 1) : 0;
-  for (let j = 0; j < bubbleCount; j++){
-    const bx = Math.random() * window.innerWidth;
-    const by = window.innerHeight + 20;
-    setTimeout(() => popBubble(bx, by, { size: 8 + Math.random()*18, life: 5200 }), 150 + j * 250 + Math.random()*250);
+    setTimeout(() => popHeart(x, y, { size: 26 + Math.random()*18, life: 6500, rise: window.innerHeight * 0.85 + Math.random() * window.innerHeight * 0.25 }), i * 280);
   }
 }
 let ambientTimer = null;
@@ -1316,10 +1310,7 @@ window.addEventListener('scroll', () => {
   lastScrollHeartTime = now;
   const x = window.innerWidth * (0.2 + Math.random()*0.6);
   const y = window.innerHeight * (0.25 + Math.random()*0.4);
-  popHeart(x, y, { size: 24 + Math.random()*16, life: 1400 });
-  if (Math.random() < 0.5) {
-    popBubble(x + (Math.random()*40-20), y + (Math.random()*30-15), { size: 7 + Math.random()*10, life: 2200 });
-  }
+  popHeart(x, y, { size: 24 + Math.random()*16, life: 1400, rise: 180 + Math.random()*120 });
 }, { passive: true });
 
 const startBtn = document.getElementById('startBtn');
@@ -1395,7 +1386,7 @@ function runCounter(){
   runCelebration();
 }
 
-const CELEBRATION_EMOJIS = ['🎉','🥂','💜','✨','🎊','💫'];
+const CELEBRATION_EMOJIS = ['🎉','🥂','✨','🎊','💫'];
 
 function spawn3DEmoji(layer, opts){
   opts = opts || {};
@@ -1459,19 +1450,25 @@ function spawnFirework(layer, opts){
 
 function ambientFirework(){
   const w = window.innerWidth, h = window.innerHeight;
-  const corner = Math.floor(Math.random() * 4);
-  const margin = 60;
-  let x, y;
-  if (corner === 0) { x = margin + Math.random()*40; y = margin + Math.random()*60; }
-  else if (corner === 1) { x = w - margin - Math.random()*40; y = margin + Math.random()*60; }
-  else if (corner === 2) { x = margin + Math.random()*40; y = h - margin - Math.random()*80; }
-  else { x = w - margin - Math.random()*40; y = h - margin - Math.random()*80; }
-  spawnFirework(heartLayer, { x, y, sparkCount: 7, dist: 24, size: 3, opacity: 0.75 });
+  const fireOne = () => {
+    const corner = Math.floor(Math.random() * 4);
+    const margin = 60;
+    let x, y;
+    if (corner === 0) { x = margin + Math.random()*40; y = margin + Math.random()*60; }
+    else if (corner === 1) { x = w - margin - Math.random()*40; y = margin + Math.random()*60; }
+    else if (corner === 2) { x = margin + Math.random()*40; y = h - margin - Math.random()*80; }
+    else { x = w - margin - Math.random()*40; y = h - margin - Math.random()*80; }
+    spawnFirework(heartLayer, { x, y, sparkCount: 7, dist: 24, size: 3, opacity: 0.75 });
+  };
+  fireOne();
+  if (Math.random() < 0.4) {
+    setTimeout(fireOne, 250 + Math.random()*200);
+  }
 }
 let ambientFireworkTimer = null;
 function startAmbientFireworks(){
   if (ambientFireworkTimer) return;
-  ambientFireworkTimer = setInterval(ambientFirework, 4800);
+  ambientFireworkTimer = setInterval(ambientFirework, 2200);
 }
 
 let celebrationRan = false;
