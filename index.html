@@ -8,17 +8,17 @@
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant:wght@300;400;500&family=Jost:wght@300;400;500&display=swap');
 
   :root{
-    --bg: #24121A;
-    --bg-deep: #160B10;
-    --wine: #5C1F2E;
-    --wine-deep: #3A1119;
-    --cream: #FBF6EF;
-    --cream-dim: #E8D9CE;
-    --rose: #F0A89C;
-    --rose-red: #E0395A;
+    --bg: #2A1430;
+    --bg-deep: #160A1C;
+    --wine: #B0628A;
+    --wine-deep: #7A3A60;
+    --cream: #FFF8FA;
+    --cream-dim: #F8D8E6;
+    --rose: #F3C6D8;
+    --rose-red: #D4759C;
     --gold: #E8C080;
-    --sage: #B89C90;
-    --line: rgba(251,246,239,0.16);
+    --sage: #C99AB5;
+    --line: rgba(255,248,250,0.16);
   }
 
   *{ margin:0; padding:0; box-sizing:border-box; }
@@ -40,7 +40,7 @@
     inset: 0;
     z-index: -1;
     background:
-      radial-gradient(ellipse at 50% 20%, rgba(224,57,90,0.06), transparent 60%),
+      radial-gradient(ellipse at 50% 25%, rgba(212,117,156,0.14), transparent 65%),
       linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
   }
   .grain{
@@ -62,10 +62,16 @@
     overflow: hidden;
   }
   .heart3d{ position: absolute; will-change: transform, opacity; }
+  .bubble3d{ position: absolute; will-change: transform, opacity; border-radius: 50%; }
+  .bubble3d-shape{
+    width: 100%; height: 100%; border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, rgba(255,248,250,0.55), rgba(212,117,156,0.22) 55%, rgba(122,58,96,0.08) 90%);
+    box-shadow: inset -2px -3px 5px rgba(60,20,50,0.25), inset 2px 3px 4px rgba(255,248,250,0.45), 0 4px 8px -2px rgba(40,10,30,0.3);
+  }
   .heart3d-shape{
     position: relative;
     width: 100%; height: 100%;
-    filter: drop-shadow(0 4px 6px rgba(58,17,25,0.5));
+    filter: drop-shadow(0 4px 6px rgba(40,10,30,0.5));
   }
   .heart3d-shape::before,
   .heart3d-shape::after{
@@ -74,9 +80,9 @@
     width: 52%;
     height: 80%;
     top: 0;
-    background: radial-gradient(circle at 30% 28%, #F8D4C8 0%, #F0A89C 45%, #C96E5E 85%);
+    background: radial-gradient(circle at 30% 28%, #F3C6D8 0%, #D4759C 45%, #8A3C66 85%);
     border-radius: 50% 50% 0 0;
-    box-shadow: inset -3px -3px 5px rgba(140,50,40,0.45), inset 2px 3px 4px rgba(255,235,220,0.5);
+    box-shadow: inset -3px -3px 5px rgba(120,40,80,0.4), inset 2px 3px 4px rgba(255,235,245,0.55);
   }
   .heart3d-shape::before{ left: 50%; transform: rotate(-45deg); transform-origin: 0 100%; }
   .heart3d-shape::after{ left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
@@ -168,7 +174,7 @@
     position: relative; z-index: 1; margin-bottom: 32vh;
     opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s ease;
   }
-  .stop:last-of-type{ margin-bottom: 6vh; }
+  .stop:last-of-type{ margin-bottom: 28vh; }
   .stop.revealed{ opacity: 1; transform: translateY(0); }
 
   .stop-marker{
@@ -178,26 +184,35 @@
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .stop.revealed .stop-marker{ transform: scale(1.15); }
-  .stop.hard .stop-marker{ border-color: var(--sage); background: #3A2A2C; }
+  .stop.hard .stop-marker{ border-color: var(--sage); background: #5A3450; }
 
   .stop-year{
-    text-align: center; font-family: 'Cormorant', serif; font-weight: 300; font-size: 13px;
-    letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+    text-align: center; font-family: 'Cormorant', serif; font-weight: 300; font-size: 15px;
+    letter-spacing: 0.34em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+    position: relative;
   }
   .stop.hard .stop-year{ color: var(--sage); }
+  .stop-year::after{
+    content: ''; display: block; width: 30px; height: 2px; margin: 10px auto 0;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.7;
+  }
+  .stop.hard .stop-year::after{ background: linear-gradient(90deg, transparent, var(--sage), transparent); }
 
   .stop-title{
-    text-align: center; font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 4vw, 30px);
-    color: var(--cream); margin-bottom: 20px; line-height: 1.3; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    text-align: center; font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4.6vw, 36px);
+    color: var(--cream); margin-bottom: 24px; margin-top: 14px; line-height: 1.3; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
   }
   .stop-title em{ color: var(--rose); font-style: italic; }
 
   /* -------- caterpillar stage: sits above each flip card, animates while reading -------- */
   .cat-stage{
-    width: min(78vw, 260px);
-    height: 60px;
-    margin: 0 auto 10px;
+    width: min(82vw, 320px);
+    height: 90px;
+    margin: 0 auto 18px;
     position: relative;
+    background: radial-gradient(ellipse at 50% 60%, rgba(212,117,156,0.16), transparent 75%);
+    border-radius: 50%;
   }
   .cpillar{ position: absolute; display: flex; align-items: flex-end; }
   .cpillar.flip{ flex-direction: row-reverse; }
@@ -218,14 +233,14 @@
     display: flex; align-items: center; justify-content: center; flex-direction: column;
     gap: 10px; padding: 1.3rem; box-shadow: 0 24px 48px -18px rgba(0,0,0,0.55);
   }
-  .flip-front{ background: linear-gradient(155deg, #2E1A21 0%, #1E1014 100%); border: 1px solid rgba(251,246,239,0.14); }
+  .flip-front{ background: linear-gradient(155deg, #3A1F42 0%, #1E0F26 100%); border: 1px solid rgba(255,248,250,0.14); }
   .flip-front .photo-placeholder{
     font-family: 'Cormorant', serif; font-style: italic; font-size: 12px; color: var(--cream-dim);
     opacity: 0.55; text-align: center; line-height: 1.5;
   }
   .flip-front .tap-cue{ font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sage); margin-top: 6px; }
   .flip-back{ background: linear-gradient(155deg, var(--wine) 0%, var(--wine-deep) 100%); transform: rotateY(180deg); text-align: center; }
-  .flip-back.hard{ background: linear-gradient(155deg, #3A2A2C 0%, #221619 100%); }
+  .flip-back.hard{ background: linear-gradient(155deg, #5A3450 0%, #321C30 100%); }
   .flip-back p{ font-family: 'Cormorant Garamond', serif; font-size: clamp(14px, 1.9vw, 16px); line-height: 1.6; color: var(--cream); }
   .flip-back p em{ color: var(--rose); font-style: italic; }
 
@@ -247,7 +262,7 @@
     border-radius: 18px; overflow: hidden; box-shadow: 0 24px 48px -18px rgba(0,0,0,0.55);
   }
   .scratch-under{
-    position: absolute; inset: 0; background: #3A1119; color: var(--rose);
+    position: absolute; inset: 0; background: #321C30; color: var(--rose);
     display: flex; align-items: center; justify-content: center; text-align: center; padding: 1.6rem;
     font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(15px, 2.4vw, 18px); line-height: 1.6;
   }
@@ -302,7 +317,7 @@
   .envelope-hint{ margin-top: 18px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cream-dim); opacity: 0.55; }
 
   .letter-content{
-    margin-top: 6vh; min-height: 60vh;
+    margin-top: 6vh; margin-bottom: 26vh; min-height: 60vh;
     display: flex; flex-direction: column; justify-content: center;
     opacity: 0; transition: opacity 1s ease;
   }
@@ -348,7 +363,7 @@
   .glow-wrap{ position: fixed; inset: 0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index: 0; }
   .glow{
     width: 60vmin; height: 60vmin; border-radius: 50%;
-    background: radial-gradient(circle, rgba(224,57,90,0.14), rgba(92,31,46,0.08) 45%, transparent 70%);
+    background: radial-gradient(circle, rgba(212,117,156,0.18), rgba(122,58,96,0.1) 45%, transparent 70%);
     filter: blur(10px); transition: opacity 1.4s ease, transform 1.4s ease; transform: scale(0.9);
   }
 
@@ -616,6 +631,33 @@ function popHeart(x, y, opts){
   }, life * 0.4);
   setTimeout(() => el.remove(), life + 1200);
 }
+function popBubble(x, y, opts){
+  opts = opts || {};
+  const size = opts.size || (10 + Math.random()*14);
+  const el = document.createElement('div');
+  el.className = 'bubble3d';
+  el.style.width = size + 'px';
+  el.style.height = size + 'px';
+  el.style.left = (x - size/2) + 'px';
+  el.style.top = (y - size/2) + 'px';
+  el.style.opacity = '0';
+  el.style.transform = 'scale(0.4) translateY(6px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)';
+  el.innerHTML = '<div class="bubble3d-shape"></div>';
+  heartLayer.appendChild(el);
+  const driftX = (Math.random()*36 - 18);
+  requestAnimationFrame(() => {
+    el.style.opacity = String(0.45 + Math.random()*0.25);
+    el.style.transform = `translate(${driftX*0.3}px, -16px) scale(1)`;
+  });
+  const life = opts.life || 4200;
+  setTimeout(() => {
+    el.style.transition = `opacity 1.4s ease, transform ${life/1000 * 0.7}s ease`;
+    el.style.opacity = '0';
+    el.style.transform = `translate(${driftX}px, -140px) scale(0.9)`;
+  }, life * 0.3);
+  setTimeout(() => el.remove(), life + 1400);
+}
 function burstHearts(x, y, count){
   count = count || 3;
   for (let i = 0; i < count; i++){
@@ -628,6 +670,11 @@ function ambientHeart(){
     const x = Math.random() * window.innerWidth;
     const y = window.innerHeight + 30;
     setTimeout(() => popHeart(x, y, { size: 14 + Math.random()*12, life: 6500 }), i * 350);
+  }
+  if (Math.random() < 0.7) {
+    const bx = Math.random() * window.innerWidth;
+    const by = window.innerHeight + 20;
+    setTimeout(() => popBubble(bx, by, { size: 8 + Math.random()*16, life: 5200 }), 150 + Math.random()*300);
   }
 }
 let ambientTimer = null;
@@ -663,7 +710,7 @@ function makeSeg(c1, c2, w){
 function faceSVG(eyeColor, mouthColor, expression, eyeSide){
   const ex = eyeSide === 'r' ? 24 : 11;
   const ex2 = ex + 9;
-  const blush = '#F0A89C';
+  const blush = '#F3C6D8';
   if (expression === 'happy') {
     return `<circle cx="${ex}" cy="15" r="3.2" fill="${eyeColor}"/><circle cx="${ex2}" cy="15" r="3.2" fill="${eyeColor}"/>
       <path d="M${ex-3} 22 Q${(ex+ex2)/2} 31 ${ex2+3} 22" stroke="${mouthColor}" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -852,7 +899,7 @@ function mountCaterpillars(stage, mood){
       ring.style.opacity = '0';
       ring.style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s ease';
       ring.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-      ring.innerHTML = '<div style="position:absolute; top:-5px; left:50%; width:6px; height:6px; background:#F0A89C; border-radius:50%; transform:translateX(-50%); box-shadow:0 1px 2px rgba(0,0,0,0.3);"></div>';
+      ring.innerHTML = '<div style="position:absolute; top:-5px; left:50%; width:6px; height:6px; background:#F3C6D8; border-radius:50%; transform:translateX(-50%); box-shadow:0 1px 2px rgba(0,0,0,0.3);"></div>';
       stage.appendChild(ring);
       requestAnimationFrame(() => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '1'; });
       setTimeout(() => { ring.style.opacity = '0'; }, 2200);
@@ -1258,6 +1305,9 @@ window.addEventListener('scroll', () => {
   const x = window.innerWidth * (0.2 + Math.random()*0.6);
   const y = window.innerHeight * (0.25 + Math.random()*0.4);
   popHeart(x, y, { size: 14 + Math.random()*10, life: 1400 });
+  if (Math.random() < 0.5) {
+    popBubble(x + (Math.random()*40-20), y + (Math.random()*30-15), { size: 7 + Math.random()*10, life: 2200 });
+  }
 }, { passive: true });
 
 const startBtn = document.getElementById('startBtn');
