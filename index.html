@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>10 Years</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant:wght@300;400;500&family=Jost:wght@300;400;500&display=swap');
+
+  :root{
+    --bg: #24121A;
+    --bg-deep: #160B10;
+    --wine: #5C1F2E;
+    --wine-deep: #3A1119;
+    --cream: #FBF6EF;
+    --cream-dim: #E8D9CE;
+    --rose: #F0A89C;
+    --gold: #E8C080;
+    --sage: #B89C90;
+    --line: rgba(251,246,239,0.16);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html, body{
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  .stage{
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(201,160,99,0.08), transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+  }
+
+  /* ambient grain */
+  .grain{
+    position:absolute; inset:0;
+    pointer-events:none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 50;
+  }
+
+  /* Floating transparent hearts drifting up the screen, with extra bursts on tap */
+  .bubbles{
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .bubble{
+    position: absolute;
+    bottom: -10vh;
+    opacity: 0;
+    animation: drift-up linear infinite;
+  }
+  /* 3D red heart built from two CSS shapes, with gradient shading and a
+     drop shadow to give it volume rather than a flat glyph look */
+  .bubble::before,
+  .bubble::after{
+    content: '';
+    position: absolute;
+    width: 52%;
+    height: 80%;
+    top: 0;
+    background: radial-gradient(circle at 30% 28%, #FF8A80 0%, #E53950 45%, #A8132A 85%);
+    border-radius: 50% 50% 0 0;
+    box-shadow: inset -3px -3px 5px rgba(120,0,20,0.5), inset 2px 3px 4px rgba(255,200,200,0.45);
+  }
+  .bubble::before{
+    left: 50%;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+  }
+  .bubble::after{
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+  }
+  .bubble{
+    filter: drop-shadow(0 4px 6px rgba(80,0,15,0.45));
+  }
+  .bubble.tap-burst{
+    animation: drift-up-fast ease-out forwards;
+  }
+  @keyframes drift-up{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg) scale(0.85); opacity: 0; }
+    12%{ opacity: 0.5; transform: translateY(-10vh) translateX(0) rotate(0deg) scale(1); }
+    90%{ opacity: 0.35; }
+    100%{ transform: translateY(-110vh) translateX(var(--drift-x, 20px)) rotate(var(--drift-rot, 10deg)) scale(0.95); opacity: 0; }
+  }
+  @keyframes drift-up-fast{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg) scale(0.5); opacity: 0; }
+    25%{ opacity: 0.9; transform: translateY(-6vh) translateX(calc(var(--drift-x, 20px) * 0.25)) rotate(calc(var(--drift-rot, 10deg) * 0.25)) scale(1); }
+    100%{ transform: translateY(-32vh) translateX(var(--drift-x, 20px)) rotate(var(--drift-rot, 10deg)) scale(0.85); opacity: 0; }
+  }
+
+  .scene{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8vh 7vw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.9s ease;
+  }
+  .scene.active{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---------- Glow / candle signature element ---------- */
+  .glow-wrap{
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
+    z-index: 0;
+  }
+  .glow{
+    width: 60vmin;
+    height: 60vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,160,99,0.18), rgba(92,31,46,0.08) 45%, transparent 70%);
+    filter: blur(10px);
+    transition: opacity 1.4s ease, transform 1.4s ease;
+    transform: scale(0.9);
+  }
+
+  /* ---------- Intro ---------- */
+  #scene-intro{ z-index: 10; }
+  .intro-mark{
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: clamp(13px, 1.6vw, 15px);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 28px;
+    opacity: 0.85;
+  }
+  .intro-title{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(40px, 8vw, 76px);
+    line-height: 1.05;
+    text-align: center;
+    color: var(--cream);
+    max-width: 14ch;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+  }
+  .intro-title em{
+    font-style: italic;
+    color: var(--rose);
+  }
+  .name-field{
+    margin-top: 40px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .name-input{
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    text-align: center;
+    padding: 6px 4px 10px;
+    width: min(60vw, 320px);
+    letter-spacing: 0.02em;
+    outline: none;
+    transition: border-color 0.4s ease;
+  }
+  .name-input::placeholder{ color: var(--cream-dim); opacity: 0.45; font-style: italic; }
+  .name-input:focus{ border-color: var(--rose); }
+  .name-hint{
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    opacity: 0.5;
+  }
+
+  .btn{
+    margin-top: 48px;
+    background: transparent;
+    border: 1px solid rgba(242,233,220,0.35);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 16px 38px;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn:hover{
+    border-color: var(--gold);
+    color: var(--bg);
+    background: var(--gold);
+    letter-spacing: 0.26em;
+  }
+  .btn:disabled{
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+  .btn:disabled:hover{
+    border-color: rgba(242,233,220,0.35);
+    color: var(--cream);
+    background: transparent;
+    letter-spacing: 0.22em;
+  }
+
+  /* ---------- Chapter scenes ---------- */
+  .chapter{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 640px;
+    z-index: 10;
+  }
+  .chapter-year{
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: clamp(13px, 1.5vw, 14px);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+    transition: opacity 0.4s ease;
+  }
+  .chapter-caption{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3.4vw, 28px);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--cream);
+    max-width: 28ch;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .chapter-caption em{ color: var(--rose); font-style: italic; }
+  /* ---------- Card stack (Tinder-style swipe) ---------- */
+  #scene-stack{
+    padding: 6vh 5vw;
+  }
+  .stack-wrap{
+    position: relative;
+    width: min(80vw, 340px);
+    height: min(80vw, 340px);
+    max-height: 50vh;
+  }
+  .love-card{
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    background: linear-gradient(160deg, var(--wine) 0%, var(--wine-deep) 100%);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease, box-shadow 0.45s ease, filter 0.45s ease;
+    will-change: transform;
+  }
+  .love-card:active{ cursor: grabbing; }
+  .love-card.dragging{ transition: none; }
+  .love-card img{
+    width: 100%; height: 100%; object-fit: cover; display: none;
+    pointer-events: none;
+  }
+  .love-card .photo-placeholder{
+    pointer-events: none;
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--cream-dim);
+    opacity: 0.6;
+    text-align: center;
+    padding: 0 24px;
+    line-height: 1.5;
+  }
+
+  .love-card .card-year{
+    position: absolute;
+    top: 18px; left: 22px;
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    z-index: 3;
+  }
+  .love-card .card-caption{
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 16% 7% 9%;
+    background: linear-gradient(180deg, transparent, rgba(20,8,12,0.92) 65%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 2.6vw, 21px);
+    line-height: 1.4;
+    color: var(--cream);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    z-index: 3;
+  }
+  .love-card .card-caption em{ color: var(--rose); font-style: italic; }
+  .love-card.hard{ }
+  .love-card.hard .card-year{ color: var(--sage); }
+  .love-card.hard{ background: linear-gradient(160deg, #3A2A2C, #221619); }
+
+  .swipe-mark{
+    position: absolute;
+    top: 26px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    z-index: 4;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .swipe-mark.left{ left: 22px; border: 2px solid var(--sage); color: var(--sage); transform: rotate(-8deg) scale(0.85); }
+  .swipe-mark.right{ right: 22px; border: 2px solid var(--rose); color: var(--rose); transform: rotate(8deg) scale(0.85); }
+
+  .stack-hint{
+    margin-top: 26px;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    opacity: 0.5;
+    animation: hint-fade 2.5s infinite;
+    transition: opacity 0.4s ease;
+  }
+  .stack-hint.hidden{
+    opacity: 0 !important;
+    animation: none;
+  }
+
+  .voice-tag{
+    margin-top: 22px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0.8;
+    cursor: pointer;
+    user-select: none;
+  }
+  .voice-dot{
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--sage);
+    box-shadow: 0 0 0 0 rgba(140,150,132,0.5);
+    animation: pulse-dot 2.2s infinite;
+  }
+  @keyframes pulse-dot{
+    0%{ box-shadow: 0 0 0 0 rgba(140,150,132,0.45); }
+    70%{ box-shadow: 0 0 0 8px rgba(140,150,132,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(140,150,132,0); }
+  }
+
+  /* ---------- Progress dots ---------- */
+  .progress{
+    position: absolute;
+    bottom: 6vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 9px;
+    z-index: 20;
+  }
+  .progress .dot{
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(242,233,220,0.18);
+    transition: background 0.5s ease, transform 0.5s ease;
+  }
+  .progress .dot.done{ background: var(--gold); }
+  .progress .dot.current{ background: var(--rose); transform: scale(1.4); }
+
+  /* ---------- Nav tap zones ---------- */
+  .tap-next{
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    cursor: pointer;
+  }
+  .advance-hint{
+    position: absolute;
+    bottom: 11vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    opacity: 0.4;
+    z-index: 20;
+    animation: hint-fade 2.5s infinite;
+  }
+  @keyframes hint-fade{
+    0%, 100%{ opacity: 0.25; }
+    50%{ opacity: 0.55; }
+  }
+
+  /* ---------- Letter scene ---------- */
+  #scene-letter .chapter{ max-width: 580px; }
+  .letter-eyebrow{
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--gold);
+    margin-bottom: 26px;
+    opacity: 0.9;
+  }
+  .letter-text{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.6vw, 22px);
+    line-height: 1.85;
+    color: var(--cream);
+    text-align: left;
+    white-space: pre-wrap;
+  }
+  .letter-text .cursor{
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--rose);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: blink 0.9s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+  .letter-sign{
+    margin-top: 28px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--rose);
+    align-self: flex-end;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .letter-sign.show{ opacity: 1; }
+
+  /* ---------- Closing ---------- */
+  #scene-closing .chapter-year{ color: var(--rose); }
+  .counter{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(15px, 2vw, 17px);
+    color: var(--cream-dim);
+    margin-top: 22px;
+    letter-spacing: 0.02em;
+  }
+  .counter strong{
+    color: var(--gold);
+    font-weight: 500;
+    font-size: 1.15em;
+  }
+  .replay{
+    margin-top: 44px;
+    background: none;
+    border: none;
+    color: var(--sage);
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  .replay:hover{ opacity: 1; color: var(--cream); }
+
+  /* sound toggle */
+  .sound-toggle{
+    position: absolute;
+    top: 5vh;
+    right: 5vw;
+    z-index: 30;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: rgba(26,22,20,0.5);
+    color: var(--cream-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .sound-toggle.show{ opacity: 0.7; }
+  .sound-toggle:hover{ opacity: 1; }
+
+  @media (max-width: 480px){
+    .stack-wrap{ width: 84vw; height: 84vw; max-height: 48vh; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="grain"></div>
+  <div class="bubbles" id="bubbles"></div>
+  <div class="glow-wrap"><div class="glow" id="glow"></div></div>
+  <button class="sound-toggle" id="soundToggle" title="Toggle music">♪</button>
+
+  <!-- INTRO -->
+  <div class="scene active" id="scene-intro">
+    <div class="intro-mark">Ten Years</div>
+    <div class="intro-title">For <em>baby</em>, before our story begins again.</div>
+    <button class="btn" id="startBtn">Begin</button>
+  </div>
+
+  <!-- CARD STACK -->
+  <div class="scene" id="scene-stack">
+    <div class="stack-wrap" id="stackWrap"></div>
+    <div class="stack-hint" id="stackHint">swipe to relive each year</div>
+  </div>
+
+  <!-- LETTER -->
+  <div class="scene" id="scene-letter">
+    <div class="chapter">
+      <div class="letter-eyebrow">one more thing</div>
+      <div class="letter-text" id="letterText"></div>
+      <div class="letter-sign" id="letterSign">— always, buddi</div>
+    </div>
+  </div>
+
+  <!-- CLOSING -->
+  <div class="scene" id="scene-closing">
+    <div class="chapter">
+      <div class="chapter-year">Still Counting</div>
+      <div class="chapter-caption">Ten years down.<br><em>Forever</em> to go.</div>
+      <div class="counter" id="liveCounter">married for <strong>—</strong> days</div>
+      <button class="replay" id="replayBtn">↺ watch it again</button>
+    </div>
+  </div>
+
+  <div class="progress" id="progressDots" style="display:none;"></div>
+  <div class="advance-hint" id="advanceHint" style="display:none;">tap anywhere to continue</div>
+  <div class="tap-next" id="tapZone"></div>
+</div>
+
+<script>
+/* =========================================================
+   EDIT THIS DATA TO PERSONALIZE
+   - photo: path/URL to an image, or leave "" for placeholder
+   - caption: short line for that year (use <em>...</em> for emphasis)
+   - hard: true marks a tougher year (subdued styling)
+   - voice: path/URL to an audio clip for that year, or "" to skip
+   ========================================================= */
+const YEARS = [
+  { year: "Year One", photo: "", caption: "Where it all started — <em>nervous, hopeful, certain.</em>", hard: false, voice: "" },
+  { year: "Year Two", photo: "", caption: "Learning each other's rhythms.", hard: false, voice: "" },
+  { year: "Year Three", photo: "", caption: "First real fight. First real apology.", hard: true, voice: "" },
+  { year: "Year Four", photo: "", caption: "We built something that felt like <em>home.</em>", hard: false, voice: "" },
+  { year: "Year Five", photo: "", caption: "Halfway, and still choosing each other.", hard: false, voice: "" },
+  { year: "Year Six", photo: "", caption: "A year that tested us — and we held on.", hard: true, voice: "" },
+  { year: "Year Seven", photo: "", caption: "Laughing again. Easier now.", hard: false, voice: "" },
+  { year: "Year Eight", photo: "", caption: "Quiet, ordinary days — my favorite kind.", hard: false, voice: "" },
+  { year: "Year Nine", photo: "", caption: "Knowing you better than I know myself.", hard: false, voice: "" },
+  { year: "Year Ten", photo: "", caption: "Here. Still here. <em>Still yours.</em>", hard: false, voice: "" },
+];
+
+const LETTER_TEXT = `My love,
+
+Ten years ago I didn't fully understand what I was promising. I just knew I wanted to keep choosing you, every ordinary day, for as long as you'd let me.
+
+So I did. Through the easy years and the hard ones, through everything we built and everything we survived — I kept choosing you.
+
+I still do.
+
+Here's to the next ten, and the ten after that.`;
+
+const WEDDING_DATE = null; // e.g. "2016-06-24" — set this to enable the live day-counter
+
+/* ========================================================= */
+
+const stackWrap = document.getElementById('stackWrap');
+const stackHint = document.getElementById('stackHint');
+const progressDots = document.getElementById('progressDots');
+const tapZone = document.getElementById('tapZone');
+const advanceHint = document.getElementById('advanceHint');
+const glow = document.getElementById('glow');
+const soundToggle = document.getElementById('soundToggle');
+
+let sceneOrder = []; // array of element ids in order: scene-stack, scene-letter, scene-closing
+let currentIndex = 0;
+let cardIndex = 0; // which year is currently on top of the stack
+
+// Build all 10 cards up front, stacked on top of each other
+const cardEls = YEARS.map((y, i) => {
+  const card = document.createElement('div');
+  card.className = 'love-card' + (y.hard ? ' hard' : '');
+  card.dataset.index = i;
+  card.innerHTML = `
+    <div class="swipe-mark left">past</div>
+    <div class="swipe-mark right">forward</div>
+    <div class="card-year">${y.year}</div>
+    ${y.photo ? `<img src="${y.photo}" alt="${y.year}">` : `<div class="photo-placeholder">photo from<br>${y.year.toLowerCase()}<br>goes here</div>`}
+    <div class="card-caption">${y.caption}</div>
+    ${y.voice ? `<div class="voice-tag" data-audio="${y.voice}" style="position:absolute; bottom:14px; right:18px; z-index:4;"><span class="voice-dot"></span></div>` : ''}
+  `;
+  stackWrap.appendChild(card);
+  return card;
+});
+
+function layoutStack(){
+  // top card (cardIndex) is fully visible; next 2 peek behind, offset and rotated
+  cardEls.forEach((card, i) => {
+    const rel = i - cardIndex;
+    if (rel < 0) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'flex';
+    card.classList.remove('dragging');
+    card.style.transform = '';
+    if (rel === 0) {
+      card.style.zIndex = 10;
+      card.style.opacity = '1';
+      card.style.filter = 'none';
+      card.style.transform = 'translate(0,0) rotate(0deg) scale(1)';
+    } else if (rel === 1) {
+      card.style.zIndex = 9;
+      card.style.opacity = '1';
+      card.style.filter = 'brightness(0.78)';
+      card.style.transform = 'translate(16px, 26px) rotate(-6deg) scale(0.94)';
+    } else if (rel === 2) {
+      card.style.zIndex = 8;
+      card.style.opacity = '1';
+      card.style.filter = 'brightness(0.58)';
+      card.style.transform = 'translate(-14px, 46px) rotate(6deg) scale(0.88)';
+    } else {
+      card.style.zIndex = 1;
+      card.style.opacity = '0';
+    }
+  });
+}
+layoutStack();
+
+// Build scene order: stack -> letter -> closing
+sceneOrder = ['scene-stack', 'scene-letter', 'scene-closing'];
+
+// Build progress dots: one per year, plus letter + closing
+const dotTargets = [...YEARS.map((_, i) => `card-${i}`), 'scene-letter', 'scene-closing'];
+dotTargets.forEach((id) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.dataset.target = id;
+  progressDots.appendChild(dot);
+});
+
+function updateProgress(){
+  const dots = progressDots.querySelectorAll('.dot');
+  // overall progress combines: cards swiped (within stack) + scene index after stack
+  let overallStep;
+  if (currentIndex === 0) {
+    overallStep = cardIndex; // 0..9 while swiping through years
+  } else {
+    overallStep = YEARS.length - 1 + currentIndex; // letter/closing come after all years
+  }
+  dots.forEach((dot, i) => {
+    dot.classList.remove('done','current');
+    if (i < overallStep) dot.classList.add('done');
+    if (i === overallStep) dot.classList.add('current');
+  });
+  progressDots.style.display = (currentIndex === 0 && cardIndex === 0) ? 'none' : 'flex';
+}
+
+function updateGlow(){
+  // glow intensity grows with progress through years, peaks at letter
+  const totalSteps = YEARS.length + sceneOrder.length - 1;
+  const step = currentIndex === 0 ? cardIndex : YEARS.length - 1 + currentIndex;
+  const t = step / totalSteps;
+  glow.style.opacity = 0.3 + t * 1.1;
+  glow.style.transform = `scale(${0.85 + t * 0.5})`;
+}
+
+function showScene(index){
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  const id = sceneOrder[index];
+  document.getElementById(id).classList.add('active');
+  currentIndex = index;
+  updateProgress();
+  updateGlow();
+
+  advanceHint.style.display = (id === 'scene-closing') ? 'none' : 'block';
+
+  if (id === 'scene-stack') {
+    tapZone.style.pointerEvents = 'none'; // swiping handles advancement here
+    advanceHint.style.display = 'none';
+  } else if (id === 'scene-letter') {
+    tapZone.style.pointerEvents = 'auto';
+    advanceHint.textContent = 'tap anywhere to continue';
+    typeLetter();
+  } else {
+    tapZone.style.pointerEvents = 'none';
+  }
+
+  if (id === 'scene-closing') {
+    runCounter();
+  }
+}
+
+function advance(){
+  if (currentIndex < sceneOrder.length - 1) {
+    showScene(currentIndex + 1);
+  }
+}
+
+tapZone.addEventListener('click', advance);
+
+// ---------------- Tinder-style swipe handling ----------------
+function swipeCardAway(card, direction){
+  // direction: 1 = right (forward in time), -1 = left (back / past)
+  const flyX = direction * (window.innerWidth * 0.9);
+  const flyRot = direction * 35;
+  card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease';
+  card.style.transform = `translate(${flyX}px, -40px) rotate(${flyRot}deg) scale(0.9)`;
+  card.style.opacity = '0';
+  spawnHeart(window.innerWidth / 2, window.innerHeight / 2, true);
+
+  setTimeout(() => {
+    cardIndex++;
+    if (cardIndex >= cardEls.length) {
+      // finished all years, move on to the letter
+      advance();
+    } else {
+      layoutStack();
+      updateProgress();
+      updateGlow();
+      stackHint.classList.add('hidden');
+    }
+  }, 460);
+}
+
+function attachSwipe(card){
+  let startX = 0, startY = 0, curX = 0, curY = 0, dragging = false;
+
+  function isTopCard(){
+    return Number(card.dataset.index) === cardIndex;
+  }
+
+  function pointerDown(e){
+    if (!isTopCard()) return;
+    dragging = true;
+    card.classList.add('dragging');
+    const p = e.touches ? e.touches[0] : e;
+    startX = p.clientX;
+    startY = p.clientY;
+    curX = 0; curY = 0;
+  }
+  function pointerMove(e){
+    if (!dragging) return;
+    const p = e.touches ? e.touches[0] : e;
+    curX = p.clientX - startX;
+    curY = p.clientY - startY;
+    const rot = curX / 18;
+    card.style.transform = `translate(${curX}px, ${curY}px) rotate(${rot}deg) scale(1)`;
+    const leftMark = card.querySelector('.swipe-mark.left');
+    const rightMark = card.querySelector('.swipe-mark.right');
+    const t = Math.min(Math.abs(curX) / 90, 1);
+    if (curX < -16) {
+      leftMark.style.opacity = t; leftMark.style.transform = `rotate(-8deg) scale(${0.85 + t * 0.2})`;
+      rightMark.style.opacity = 0;
+    } else if (curX > 16) {
+      rightMark.style.opacity = t; rightMark.style.transform = `rotate(8deg) scale(${0.85 + t * 0.2})`;
+      leftMark.style.opacity = 0;
+    } else {
+      leftMark.style.opacity = 0; rightMark.style.opacity = 0;
+    }
+  }
+  function pointerUp(){
+    if (!dragging) return;
+    dragging = false;
+    card.classList.remove('dragging');
+    const threshold = 80;
+    if (Math.abs(curX) > threshold) {
+      swipeCardAway(card, curX > 0 ? 1 : -1);
+    } else {
+      card.style.transform = 'translate(0,0) rotate(0deg) scale(1)';
+      card.querySelector('.swipe-mark.left').style.opacity = 0;
+      card.querySelector('.swipe-mark.right').style.opacity = 0;
+    }
+  }
+
+  card.addEventListener('mousedown', pointerDown);
+  card.addEventListener('mousemove', pointerMove);
+  window.addEventListener('mouseup', pointerUp);
+  card.addEventListener('touchstart', pointerDown, { passive: true });
+  card.addEventListener('touchmove', pointerMove, { passive: true });
+  card.addEventListener('touchend', pointerUp);
+
+  // a plain tap/click on the top card (no real drag) also nudges it forward,
+  // so the experience still works for people who just tap instead of swipe
+  card.addEventListener('click', (e) => {
+    if (!isTopCard()) return;
+    if (Math.abs(curX) > 10) return; // was a drag, already handled
+    swipeCardAway(card, 1);
+  });
+}
+
+cardEls.forEach(attachSwipe);
+
+function spawnSparkles(){} // kept as no-op for backward compatibility, unused now
+
+// Intro logic
+const startBtn = document.getElementById('startBtn');
+
+startBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  showScene(0);
+  startMusic();
+});
+
+// Voice note tags (delegated)
+stackWrap.addEventListener('click', (e) => {
+  const tag = e.target.closest('.voice-tag');
+  if (tag) {
+    e.stopPropagation();
+    const src = tag.dataset.audio;
+    if (src) {
+      const audio = new Audio(src);
+      audio.play().catch(()=>{});
+    }
+  }
+});
+
+// Letter typing animation
+function typeLetter(){
+  const el = document.getElementById('letterText');
+  const sign = document.getElementById('letterSign');
+  el.innerHTML = '';
+  sign.classList.remove('show');
+  const text = LETTER_TEXT;
+  let i = 0;
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+
+  function tick(){
+    if (i <= text.length) {
+      el.textContent = text.slice(0, i);
+      el.appendChild(cursor);
+      i += 2;
+      setTimeout(tick, 18);
+    } else {
+      cursor.remove();
+      sign.classList.add('show');
+    }
+  }
+  tick();
+}
+
+// Live counter
+function runCounter(){
+  const el = document.getElementById('liveCounter');
+  if (!WEDDING_DATE) {
+    el.innerHTML = `ten years, and every day still feels like <strong>choosing you.</strong>`;
+    return;
+  }
+  const start = new Date(WEDDING_DATE);
+  const now = new Date();
+  const days = Math.floor((now - start) / 86400000);
+  el.innerHTML = `married for <strong>${days.toLocaleString()}</strong> days`;
+}
+
+// Replay
+document.getElementById('replayBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  cardIndex = 0;
+  layoutStack();
+  stackHint.classList.remove('hidden');
+  showScene(0);
+});
+
+/* ---------------- Ambient + tap-burst hearts ---------------- */
+const bubblesContainer = document.getElementById('bubbles');
+
+function spawnHeart(x, y, fast){
+  const b = document.createElement('div');
+  b.className = 'bubble' + (fast ? ' tap-burst' : '');
+  const size = fast ? (16 + Math.random() * 14) : (14 + Math.random() * 14);
+  b.style.width = `${size}px`;
+  b.style.height = `${size}px`;
+
+  if (fast && x !== undefined) {
+    b.style.left = `${x}px`;
+    b.style.bottom = 'auto';
+    b.style.top = `${y}px`;
+  } else {
+    b.style.left = `${Math.random() * 100}%`;
+  }
+
+  const duration = fast ? (1.3 + Math.random() * 0.6) : (14 + Math.random() * 9);
+  b.style.animationDuration = `${duration}s`;
+  b.style.setProperty('--drift-x', `${(Math.random() * 60 - 30)}px`);
+  b.style.setProperty('--drift-rot', `${(Math.random() * 24 - 12)}deg`);
+  bubblesContainer.appendChild(b);
+  setTimeout(() => b.remove(), duration * 1000 + 300);
+}
+
+// slow, sparse ambient hearts drifting up in the background
+spawnHeart();
+setInterval(spawnHeart, 3800);
+
+// a soft, unhurried heart or two wherever he taps the screen (capture phase
+// so it always fires, even on taps that stopPropagation, like the envelope or buttons)
+document.addEventListener('click', (e) => {
+  const count = 1 + Math.floor(Math.random() * 2); // 1-2 hearts, gentle
+  for (let i = 0; i < count; i++){
+    setTimeout(() => spawnHeart(e.clientX, e.clientY, true), i * 160);
+  }
+}, true);
+
+/* ---------------- Music ---------------- */
+/* IMPORTANT: "A Thousand Years" by Katy Perry is copyrighted and can't be
+   embedded here. Use a royalty-free romantic piano track instead — it will
+   play continuously and seamlessly through the intro, all 10 years, the
+   letter, and the closing screen (it never restarts between scenes).
+
+   Free, legal sources for a similar emotional tone (piano-led, swelling,
+   romantic):
+   - Pixabay Music: https://pixabay.com/music/search/romantic%20piano/
+   - Fesliyan Studios: https://www.fesliyanstudios.com/royalty-free-music/downloads-c/romantic-music/23
+   Download an MP3 from either site, host it somewhere reachable (e.g. the
+   same place you host this page), and paste the URL below. */
+const MUSIC_SRC = "./assets/background-music.mp3"; // NastelBom - "Romantic" (Pixabay, royalty-free)
+let bgMusic = null;
+let musicStarted = false;
+
+if (MUSIC_SRC) {
+  bgMusic = new Audio(MUSIC_SRC);
+  bgMusic.loop = true;
+  bgMusic.volume = 0.0;
+  bgMusic.preload = "auto";
+}
+
+function startMusic(){
+  if (!bgMusic || musicStarted) return;
+  musicStarted = true;
+  bgMusic.play().catch(()=>{});
+  soundToggle.classList.add('show');
+  let v = 0;
+  const fade = setInterval(() => {
+    v += 0.02;
+    if (v >= 0.32) { v = 0.32; clearInterval(fade); }
+    bgMusic.volume = v;
+  }, 200);
+}
+/* Note: bgMusic is created once and only started here, on the user's first
+   tap (Begin button). Because showScene() never touches bgMusic, the same
+   instance keeps playing uninterrupted as he moves through every year,
+   the letter, and the closing screen. */
+
+let muted = false;
+soundToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (!bgMusic) return;
+  muted = !muted;
+  bgMusic.muted = muted;
+  soundToggle.textContent = muted ? '✕' : '♪';
+});
+
+// init: scene-intro is shown by default via its "active" class in HTML.
+// We don't call showScene() here so the intro stays visible until Begin is tapped.
+</script>
+
+</body>
+</html>
