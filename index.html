@@ -676,7 +676,7 @@ function ambientHeart(){
   for (let i = 0; i < count; i++){
     const x = Math.random() * window.innerWidth;
     const y = window.innerHeight + 30;
-    setTimeout(() => popHeart(x, y, { size: 14 + Math.random()*12, life: 6500 }), i * 280);
+    setTimeout(() => popHeart(x, y, { size: 26 + Math.random()*18, life: 6500 }), i * 280);
   }
   const bubbleCount = Math.random() < 0.85 ? (Math.random() < 0.3 ? 2 : 1) : 0;
   for (let j = 0; j < bubbleCount; j++){
@@ -1316,7 +1316,7 @@ window.addEventListener('scroll', () => {
   lastScrollHeartTime = now;
   const x = window.innerWidth * (0.2 + Math.random()*0.6);
   const y = window.innerHeight * (0.25 + Math.random()*0.4);
-  popHeart(x, y, { size: 14 + Math.random()*10, life: 1400 });
+  popHeart(x, y, { size: 24 + Math.random()*16, life: 1400 });
   if (Math.random() < 0.5) {
     popBubble(x + (Math.random()*40-20), y + (Math.random()*30-15), { size: 7 + Math.random()*10, life: 2200 });
   }
