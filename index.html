@@ -342,10 +342,14 @@
   .letter-sign.show{ opacity: 1; }
 
   #closing{
-    position: relative; text-align: center; padding: 6vh 7vw 14vh;
+    position: relative; min-height: 100vh; text-align: center; padding: 6vh 7vw;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s ease;
+    overflow: hidden;
   }
   #closing.revealed{ opacity: 1; transform: translateY(0); }
+  .celebration-layer{ position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+  .closing-content{ position: relative; z-index: 2; }
   .closing-label{
     font-family: 'Cormorant', serif; font-weight: 300; font-size: 13px; letter-spacing: 0.3em;
     text-transform: uppercase; color: var(--rose); margin-bottom: 22px;
@@ -402,7 +406,7 @@
 
 <div id="intro">
   <div class="intro-mark">Ten Years</div>
-  <div class="intro-title">For <em>baby</em>, before our story begins again.</div>
+  <div class="intro-title">Before our<br><em>story</em> begins again.</div>
   <div class="intro-sub">Everything that brought us here — every year, the good ones and the hard ones, all the way to now.</div>
   <button class="btn" id="startBtn">Begin</button>
   <div class="scroll-hint">scroll to walk through it with me</div>
@@ -440,10 +444,13 @@
 </div>
 
 <div id="closing">
-  <div class="closing-label">Still Counting</div>
-  <div class="closing-title">Ten years down.<br><em>Forever</em> to go.</div>
-  <div class="counter" id="liveCounter">married for <strong>—</strong> days</div>
-  <button class="replay" id="replayBtn">↺ back to the beginning</button>
+  <div class="celebration-layer" id="celebrationLayer"></div>
+  <div class="closing-content">
+    <div class="closing-label">Still Counting</div>
+    <div class="closing-title">Ten years down.<br><em>Forever</em> to go.</div>
+    <div class="counter" id="liveCounter">married for <strong>—</strong> days</div>
+    <button class="replay" id="replayBtn">↺ back to the beginning</button>
+  </div>
 </div>
 
 <script>
@@ -665,23 +672,24 @@ function burstHearts(x, y, count){
   }
 }
 function ambientHeart(){
-  const count = Math.random() < 0.4 ? 2 : 1;
+  const count = Math.random() < 0.55 ? 2 : (Math.random() < 0.15 ? 3 : 1);
   for (let i = 0; i < count; i++){
     const x = Math.random() * window.innerWidth;
     const y = window.innerHeight + 30;
-    setTimeout(() => popHeart(x, y, { size: 14 + Math.random()*12, life: 6500 }), i * 350);
+    setTimeout(() => popHeart(x, y, { size: 14 + Math.random()*12, life: 6500 }), i * 280);
   }
-  if (Math.random() < 0.7) {
+  const bubbleCount = Math.random() < 0.85 ? (Math.random() < 0.3 ? 2 : 1) : 0;
+  for (let j = 0; j < bubbleCount; j++){
     const bx = Math.random() * window.innerWidth;
     const by = window.innerHeight + 20;
-    setTimeout(() => popBubble(bx, by, { size: 8 + Math.random()*16, life: 5200 }), 150 + Math.random()*300);
+    setTimeout(() => popBubble(bx, by, { size: 8 + Math.random()*18, life: 5200 }), 150 + j * 250 + Math.random()*250);
   }
 }
 let ambientTimer = null;
 function startAmbientHearts(){
   if (ambientTimer) return;
   ambientHeart();
-  ambientTimer = setInterval(ambientHeart, 2800);
+  ambientTimer = setInterval(ambientHeart, 1700);
 }
 document.addEventListener('click', (e) => {
   if (e.target.closest('#gate')) return;
@@ -1373,15 +1381,100 @@ function runCounter(){
   const el = document.getElementById('liveCounter');
   if (!WEDDING_DATE) {
     el.innerHTML = `ten years, and every day still feels like <strong>choosing you.</strong>`;
-    return;
+  } else {
+    const start = new Date(WEDDING_DATE);
+    const now = new Date();
+    const days = Math.floor((now - start) / 86400000);
+    el.innerHTML = `married for <strong>${days.toLocaleString()}</strong> days`;
   }
-  const start = new Date(WEDDING_DATE);
-  const now = new Date();
-  const days = Math.floor((now - start) / 86400000);
-  el.innerHTML = `married for <strong>${days.toLocaleString()}</strong> days`;
+  runCelebration();
+}
+
+const CELEBRATION_EMOJIS = ['🎉','🥂','💜','✨','🎊','💫'];
+
+function spawn3DEmoji(layer, opts){
+  opts = opts || {};
+  const w = window.innerWidth, h = window.innerHeight;
+  const wrap = document.createElement('div');
+  wrap.style.position = 'absolute';
+  wrap.style.left = (Math.random() * w * 0.85) + 'px';
+  wrap.style.top = opts.fromBottom ? (h + 20) + 'px' : (Math.random() * h * 0.3) + 'px';
+  wrap.style.fontSize = (opts.size || (24 + Math.random() * 18)) + 'px';
+  wrap.style.opacity = '0';
+  wrap.style.filter = 'drop-shadow(0 6px 10px rgba(20,5,15,0.5)) drop-shadow(0 1px 1px rgba(255,255,255,0.25))';
+  const duration = opts.duration || 1.3;
+  wrap.style.transition = `opacity 0.3s ease, transform ${duration}s cubic-bezier(0.22,1,0.36,1)`;
+  wrap.textContent = CELEBRATION_EMOJIS[Math.floor(Math.random() * CELEBRATION_EMOJIS.length)];
+  wrap.style.transform = 'scale(0.4) rotate(0deg)';
+  layer.appendChild(wrap);
+  const dx = (Math.random() * 140 - 70);
+  const dy = opts.fromBottom ? -(h * 0.5 + Math.random() * h * 0.3) : (h * 0.3 + Math.random() * h * 0.3);
+  const rot = Math.random() * 80 - 40;
+  requestAnimationFrame(() => {
+    wrap.style.opacity = '1';
+    wrap.style.transform = `translate(${dx}px, ${dy}px) scale(1.15) rotate(${rot}deg)`;
+  });
+  setTimeout(() => { wrap.style.opacity = '0'; }, duration * 1000 * 0.7);
+  setTimeout(() => wrap.remove(), duration * 1000 + 500);
+}
+
+function spawnFirework(layer){
+  const w = window.innerWidth, h = window.innerHeight;
+  const cx = w * (0.15 + Math.random() * 0.7);
+  const cy = h * (0.12 + Math.random() * 0.35);
+  const colors = ['#F3C6D8', '#E8C080', '#D4759C', '#FFF8FA'];
+  const sparkCount = 14;
+  for (let i = 0; i < sparkCount; i++) {
+    const spark = document.createElement('div');
+    const angle = (Math.PI * 2 * i) / sparkCount;
+    const dist = 40 + Math.random() * 50;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    spark.style.position = 'absolute';
+    spark.style.left = cx + 'px';
+    spark.style.top = cy + 'px';
+    spark.style.width = '4px';
+    spark.style.height = '4px';
+    spark.style.borderRadius = '50%';
+    spark.style.background = color;
+    spark.style.boxShadow = `0 0 6px 1px ${color}`;
+    spark.style.opacity = '0';
+    spark.style.transition = 'opacity 0.25s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)';
+    layer.appendChild(spark);
+    requestAnimationFrame(() => {
+      spark.style.opacity = '1';
+      spark.style.transform = `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px)`;
+    });
+    setTimeout(() => { spark.style.opacity = '0'; }, 550);
+    setTimeout(() => spark.remove(), 1200);
+  }
+}
+
+let celebrationRan = false;
+function runCelebration(){
+  if (celebrationRan) return;
+  celebrationRan = true;
+  const layer = document.getElementById('celebrationLayer');
+  if (!layer) return;
+
+  for (let i = 0; i < 22; i++) {
+    setTimeout(() => spawn3DEmoji(layer, { size: 24 + Math.random() * 18, duration: 1.4 }), i * 50);
+  }
+  for (let i = 0; i < 4; i++) {
+    setTimeout(() => spawnFirework(layer), 200 + i * 380);
+  }
+  setTimeout(() => {
+    let count = 0;
+    const interval = setInterval(() => {
+      spawn3DEmoji(layer, { fromBottom: true, duration: 3, size: 20 + Math.random() * 14 });
+      count++;
+      if (count > 14) clearInterval(interval);
+    }, 450);
+  }, 1100);
 }
 
 document.getElementById('replayBtn').addEventListener('click', () => {
+  celebrationRan = false;
+  counterShown = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
