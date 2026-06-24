@@ -832,6 +832,25 @@ function mountCaterpillars(stage, mood){
     }
     animate();
 
+    function popSpark(){
+      const spark = document.createElement('div');
+      spark.style.position = 'absolute';
+      spark.style.left = '50%'; spark.style.top = '20%';
+      spark.style.width = '10px'; spark.style.height = '10px';
+      spark.style.borderRadius = '50%';
+      spark.style.background = '#FFF6E8';
+      spark.style.boxShadow = '0 0 14px 4px rgba(255,230,160,0.85), 0 0 4px 1px #fff';
+      spark.style.transform = 'translate(-50%,-50%) scale(0)';
+      spark.style.opacity = '0';
+      spark.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease';
+      stage.appendChild(spark);
+      requestAnimationFrame(() => { spark.style.opacity = '1'; spark.style.transform = 'translate(-50%,-50%) scale(1)'; });
+      setTimeout(() => { spark.style.opacity = '0'; spark.style.transform = 'translate(-50%,-50%) scale(0.3)'; }, 280);
+      setTimeout(() => spark.remove(), 700);
+    }
+    const sparkInterval = setInterval(popSpark, 3600);
+    cleanupFns.push(() => clearInterval(sparkInterval));
+
   } else if (mood === 'sidebyside') {
     c1.style.left = '24%';
     c2.style.left = '60%';
@@ -844,6 +863,26 @@ function mountCaterpillars(stage, mood){
     }
     animate();
 
+    function popPlan(){
+      const plan = document.createElement('div');
+      plan.style.position = 'absolute';
+      plan.style.left = '50%'; plan.style.top = '14%';
+      plan.style.width = '20px'; plan.style.height = '14px';
+      plan.style.background = '#F8EBD0';
+      plan.style.borderRadius = '2px';
+      plan.style.boxShadow = '0 3px 6px rgba(0,0,0,0.3)';
+      plan.style.transform = 'translate(-50%,-50%) scaleY(0)';
+      plan.style.opacity = '0';
+      plan.style.transition = 'transform 0.4s ease, opacity 0.3s ease';
+      plan.innerHTML = '<div style="position:absolute; left:3px; top:3px; width:14px; height:1.5px; background:#C9A968;"></div><div style="position:absolute; left:3px; top:7px; width:10px; height:1.5px; background:#C9A968;"></div>';
+      stage.appendChild(plan);
+      requestAnimationFrame(() => { plan.style.opacity = '1'; plan.style.transform = 'translate(-50%,-50%) scaleY(1)'; });
+      setTimeout(() => { plan.style.opacity = '0'; }, 1500);
+      setTimeout(() => plan.remove(), 2000);
+    }
+    const planInterval = setInterval(popPlan, 4000);
+    cleanupFns.push(() => clearInterval(planInterval));
+
   } else if (mood === 'apart') {
     c1.style.left = '2%';
     c2.style.right = '2%';
@@ -855,16 +894,48 @@ function mountCaterpillars(stage, mood){
     }
     animate();
 
+    const connector = document.createElement('div');
+    connector.style.position = 'absolute';
+    connector.style.left = '14%'; connector.style.right = '14%';
+    connector.style.top = '50%';
+    connector.style.height = '1px';
+    connector.style.borderTop = '1px dashed rgba(243,198,216,0.4)';
+    stage.appendChild(connector);
+    let tc = Math.random()*10;
+    let connectorRaf;
+    function pulseConnector(){
+      tc += 0.03;
+      connector.style.opacity = String(0.25 + Math.abs(Math.sin(tc))*0.35);
+      connectorRaf = requestAnimationFrame(pulseConnector);
+    }
+    pulseConnector();
+    cleanupFns.push(() => cancelAnimationFrame(connectorRaf));
+
   } else if (mood === 'reunite') {
     c1.style.left = '4%';
     c2.style.right = '4%';
     c1.style.transition = 'left 2.4s ease-in-out';
     c2.style.transition = 'right 2.4s ease-in-out';
     let drifted = false;
+    function popConnect(){
+      const pulse = document.createElement('div');
+      pulse.style.position = 'absolute';
+      pulse.style.left = '50%'; pulse.style.top = '25%';
+      pulse.style.width = '14px'; pulse.style.height = '14px';
+      pulse.style.borderRadius = '50%';
+      pulse.style.border = '2px solid rgba(243,198,216,0.8)';
+      pulse.style.transform = 'translate(-50%,-50%) scale(0.3)';
+      pulse.style.opacity = '0.9';
+      pulse.style.transition = 'transform 0.7s ease-out, opacity 0.7s ease-out';
+      stage.appendChild(pulse);
+      requestAnimationFrame(() => { pulse.style.transform = 'translate(-50%,-50%) scale(2.2)'; pulse.style.opacity = '0'; });
+      setTimeout(() => pulse.remove(), 800);
+    }
     const cycle = () => {
       drifted = !drifted;
       c1.style.left = drifted ? '34%' : '4%';
       c2.style.right = drifted ? '34%' : '4%';
+      if (drifted) setTimeout(popConnect, 2300);
     };
     const interval = setInterval(cycle, 2800);
     cleanupFns.push(() => clearInterval(interval));
@@ -957,6 +1028,26 @@ function mountCaterpillars(stage, mood){
     }
     animate();
 
+    const swaddle = document.createElement('div');
+    swaddle.style.position = 'absolute';
+    swaddle.style.left = '50%'; swaddle.style.top = '55%';
+    swaddle.style.width = '70px'; swaddle.style.height = '50px';
+    swaddle.style.borderRadius = '50%';
+    swaddle.style.background = 'radial-gradient(ellipse, rgba(232,192,128,0.28), transparent 75%)';
+    swaddle.style.transform = 'translate(-50%,-50%) scale(1)';
+    swaddle.style.zIndex = '1';
+    stage.appendChild(swaddle);
+    let ts2 = Math.random()*10;
+    let swaddleRaf;
+    function pulseSwaddle(){
+      ts2 += 0.025;
+      const s = 1 + Math.sin(ts2)*0.18;
+      swaddle.style.transform = `translate(-50%,-50%) scale(${s})`;
+      swaddleRaf = requestAnimationFrame(pulseSwaddle);
+    }
+    pulseSwaddle();
+    cleanupFns.push(() => cancelAnimationFrame(swaddleRaf));
+
   } else if (mood === 'shake') {
     c1.style.left = '26%';
     c2.style.left = '60%';
@@ -968,6 +1059,27 @@ function mountCaterpillars(stage, mood){
       raf = requestAnimationFrame(animate);
     }
     animate();
+
+    const cloud = document.createElement('div');
+    cloud.style.position = 'absolute';
+    cloud.style.left = '50%'; cloud.style.top = '8%';
+    cloud.style.width = '46px'; cloud.style.height = '18px';
+    cloud.style.borderRadius = '50%';
+    cloud.style.background = 'rgba(120,100,115,0.4)';
+    cloud.style.filter = 'blur(2px)';
+    cloud.style.transform = 'translate(-50%,-50%)';
+    cloud.style.zIndex = '1';
+    stage.appendChild(cloud);
+    let tcl = Math.random()*10;
+    let cloudRaf;
+    function driftCloud(){
+      tcl += 0.02;
+      cloud.style.opacity = String(0.5 + Math.sin(tcl)*0.25);
+      cloud.style.transform = `translate(${-50+Math.sin(tcl*0.5)*6}%,-50%)`;
+      cloudRaf = requestAnimationFrame(driftCloud);
+    }
+    driftCloud();
+    cleanupFns.push(() => cancelAnimationFrame(cloudRaf));
 
   } else if (mood === 'driftapart') {
     /* 2024 — slowly pulling apart, then choosing to come back and hug */
@@ -1017,6 +1129,25 @@ function mountCaterpillars(stage, mood){
       raf = requestAnimationFrame(animate);
     }
     animate();
+
+    const star = document.createElement('div');
+    star.style.position = 'absolute';
+    star.style.left = '50%'; star.style.top = '15%';
+    star.style.width = '6px'; star.style.height = '6px';
+    star.style.borderRadius = '50%';
+    star.style.background = '#F3C6D8';
+    star.style.boxShadow = '0 0 8px 2px rgba(243,198,216,0.6)';
+    star.style.transform = 'translate(-50%,-50%)';
+    stage.appendChild(star);
+    let tst = Math.random()*10;
+    let starRaf;
+    function glowStar(){
+      tst += 0.022;
+      star.style.opacity = String(0.4 + Math.abs(Math.sin(tst))*0.5);
+      starRaf = requestAnimationFrame(glowStar);
+    }
+    glowStar();
+    cleanupFns.push(() => cancelAnimationFrame(starRaf));
 
   } else if (mood === 'embrace') {
     /* 2026 — confident hug, with hearts popping near the kiss point */
