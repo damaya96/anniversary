@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>10 Years</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant:wght@300;400;500&family=Jost:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant:wght@300;400;500&family=Jost:wght@300;400;500&family=Kalam:wght@400;700&display=swap');
 
   :root{
     --bg: #2A1430;
@@ -303,55 +303,106 @@
   }
   #letter-section.revealed .envelope-wrap{ opacity: 1; transform: scale(1) translate(0,0) rotate(0deg); }
   .envelope{ position: relative; width: 260px; height: 170px; cursor: pointer; perspective: 900px; }
-  .env-body{ position: absolute; inset: 0; background: linear-gradient(160deg, #FBF6EF, #EFE6DA); border-radius: 16px; box-shadow: 0 24px 48px -16px rgba(0,0,0,0.5); }
+  .env-body{ position: absolute; inset: 0; background: linear-gradient(160deg, #B0334A, #7A1B30); border-radius: 16px; box-shadow: 0 24px 48px -16px rgba(0,0,0,0.5); }
   .env-shadow-tri{
     position: absolute; inset: 0; border-radius: 16px;
-    background: linear-gradient(135deg, transparent 49.5%, rgba(0,0,0,0.08) 50.5%), linear-gradient(225deg, transparent 49.5%, rgba(0,0,0,0.08) 50.5%);
+    background: linear-gradient(135deg, transparent 49.5%, rgba(0,0,0,0.16) 50.5%), linear-gradient(225deg, transparent 49.5%, rgba(0,0,0,0.16) 50.5%);
   }
   .env-flap{
     position: absolute; top: 0; left: 0; width: 100%; height: 0;
-    border-left: 130px solid transparent; border-right: 130px solid transparent; border-top: 85px solid #E8D9CE;
+    border-left: 130px solid transparent; border-right: 130px solid transparent; border-top: 85px solid #9C2740;
     transform-origin: top center; transition: transform 0.7s cubic-bezier(0.4,0.2,0.2,1); z-index: 3;
     filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25));
   }
   .env-flap.open{ transform: rotateX(180deg); }
   .env-seal{
-    position: absolute; left: 50%; top: 0; width: 30px; height: 30px;
-    background: radial-gradient(circle at 32% 28%, #FF7A8A, var(--rose-red) 70%);
+    position: absolute; left: 50%; top: 0; width: 34px; height: 34px;
+    background: radial-gradient(circle at 32% 28%, #F3D29A, var(--gold) 70%);
     border-radius: 50%; transform: translate(-50%, -50%); z-index: 4;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;
     transition: opacity 0.3s ease, transform 0.3s ease;
   }
   .env-seal.gone{ opacity: 0; transform: translate(-50%,-50%) scale(0.4); }
-  .env-seal-mark{ font-size: 13px; color: #fff; }
+  .env-seal-mark{ font-size: 15px; color: #6B3A10; }
   .env-label{ position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; }
-  .env-label span{ font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--wine-deep); }
+  .env-label span{ font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: #FBE0E5; }
   .envelope-hint{ margin-top: 18px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cream-dim); opacity: 0.55; }
 
   .letter-content{
-    margin-top: 6vh; margin-bottom: 26vh; min-height: 60vh;
-    display: flex; flex-direction: column; justify-content: center;
-    opacity: 0; transition: opacity 1s ease;
+    margin-top: 2vh; margin-bottom: 26vh; min-height: 60vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.5s ease;
   }
   .letter-content.show{ opacity: 1; }
+  .letter-card{
+    width: min(86vw, 480px); max-height: 60px; overflow: hidden;
+    background: linear-gradient(155deg, #FCF5E8 0%, #F6E9D2 40%, #E8D2A8 100%);
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    transform: translateY(40px) scale(0.82) perspective(700px) rotateX(0deg);
+    opacity: 0;
+    transition: max-height 1.1s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.34,1.2,0.4,1), opacity 0.5s ease, box-shadow 1.1s ease;
+    position: relative;
+  }
+  .letter-content.unrolled .letter-card{
+    max-height: 900px; transform: translateY(0) scale(1) perspective(700px) rotateX(5deg); opacity: 1;
+    box-shadow:
+      0 2px 0 #E0CA9E, 0 5px 0 #D4BC8C, 0 8px 0 #C7AE7A,
+      0 14px 24px rgba(0,0,0,0.35), 0 30px 60px -10px rgba(0,0,0,0.55),
+      inset 0 0 40px rgba(160,110,40,0.16), inset 0 1px 1px rgba(255,255,255,0.55);
+  }
+  .letter-card::before{
+    content: ''; position: absolute; top: 0; left: 0; width: 36px; height: 36px;
+    background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.07) 50%);
+    border-radius: 10px 0 0 0; pointer-events: none; z-index: 2;
+  }
+  .letter-card-inner{
+    padding: 2.6rem 2rem; opacity: 0; position: relative; z-index: 1;
+    transition: opacity 0.7s ease 0.55s;
+  }
+  .letter-card-inner::before, .letter-card-inner::after{
+    content: ''; position: absolute; left: 6%; right: 6%; height: 1px;
+    background: rgba(120,80,30,0.18); box-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .letter-card-inner::before{ top: 32%; }
+  .letter-card-inner::after{ top: 64%; }
+  .letter-content.unrolled .letter-card-inner{ opacity: 1; }
   .letter-eyebrow{
     text-align: center; font-family: 'Cormorant', serif; font-style: italic; font-size: 15px;
-    color: var(--gold); margin-bottom: 26px; opacity: 0.9;
+    color: #9A6A2A; margin-bottom: 22px; opacity: 0.9;
   }
   .letter-text{
-    font-family: 'Cormorant Garamond', serif; font-size: clamp(17px, 2.4vw, 21px);
-    line-height: 1.9; color: var(--cream); white-space: pre-wrap;
+    font-family: 'Kalam', cursive; font-size: clamp(16px, 2.2vw, 19px);
+    line-height: 1.85; color: #5C3A18; white-space: pre-wrap;
   }
   .letter-text .cursor{
-    display: inline-block; width: 2px; height: 1.1em; background: var(--rose); margin-left: 2px;
+    display: inline-block; width: 2px; height: 1.1em; background: #9A6A2A; margin-left: 2px;
     vertical-align: text-bottom; animation: blink 0.9s step-end infinite;
   }
   @keyframes blink{ 50%{ opacity: 0; } }
   .letter-sign{
-    margin-top: 28px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 20px;
-    color: var(--rose); text-align: right; opacity: 0; transition: opacity 1s ease;
+    margin-top: 24px; font-family: 'Kalam', cursive; font-weight: 700; font-size: 19px;
+    color: #9C3C50; text-align: right; opacity: 0; transition: opacity 1s ease;
   }
   .letter-sign.show{ opacity: 1; }
+
+  .firefly-popup{
+    position: relative; width: 220px; height: 140px; margin: 4vh auto 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: scale(0.7);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .firefly-popup.show{ opacity: 1; transform: scale(1); }
+  .firefly-orbit{ position: absolute; inset: 0; pointer-events: none; }
+  .firefly{
+    position: absolute; width: 9px; height: 9px; border-radius: 50%;
+    will-change: transform, opacity;
+  }
+  .firefly-message{
+    position: relative; z-index: 2; font-family: 'Kalam', cursive; font-size: 22px;
+    color: var(--cream); text-shadow: 0 2px 10px rgba(212,117,156,0.6), 0 0 20px rgba(243,198,216,0.3);
+    text-align: center;
+  }
 
   #closing{
     position: relative; min-height: 100vh; text-align: center; padding: 6vh 7vw;
@@ -444,14 +495,22 @@
       <div class="env-shadow-tri"></div>
       <div class="env-label"><span>one more thing, love</span></div>
       <div class="env-flap" id="envFlap"></div>
-      <div class="env-seal" id="envSeal"><span class="env-seal-mark">♥</span></div>
+      <div class="env-seal" id="envSeal"><span class="env-seal-mark">🔒</span></div>
     </div>
     <div class="envelope-hint" id="envelopeHint">tap to open</div>
   </div>
   <div class="letter-content" id="letterContent">
-    <div class="letter-eyebrow">one more thing</div>
-    <div class="letter-text" id="letterText"></div>
-    <div class="letter-sign" id="letterSign">— always, buddi</div>
+    <div class="letter-card" id="letterCard">
+      <div class="letter-card-inner">
+        <div class="letter-eyebrow">one more thing</div>
+        <div class="letter-text" id="letterText"></div>
+        <div class="letter-sign" id="letterSign">— always, buddi</div>
+      </div>
+    </div>
+  </div>
+  <div class="firefly-popup" id="fireflyPopup">
+    <div class="firefly-orbit" id="fireflyOrbit"></div>
+    <div class="firefly-message" id="fireflyMessage">love you kannayya</div>
   </div>
 </div>
 
@@ -513,7 +572,7 @@ const YEARS = [
     title: "Where it started",
     scratchLabel: "2016",
     reveal: "\u201CAs if you'd ever want to marry me.\u201D\n\n\u201CYes. I do.\u201D",
-    message: "A question I half didn't mean. <em>You answered like you'd already decided.</em>",
+    message: "We were just talking, like always. <em>Then you said yes before I finished being sarcastic.</em>",
     hard: false
   },
   {
@@ -522,7 +581,7 @@ const YEARS = [
     type: "flip",
     mood: "sidebyside",
     title: "Making a plan together",
-    message: "You wanted to build a life somewhere new. <em>I wanted to build it with you.</em>",
+    message: "You wanted to build a life abroad. <em>I just wanted to build it with you.</em>",
     hard: false
   },
   {
@@ -531,7 +590,7 @@ const YEARS = [
     type: "flip",
     mood: "apart",
     title: "You went first",
-    message: "An ocean between us for a while. <em>Missing you taught me how much I needed you.</em>",
+    message: "I missed you so much. <em>But nothing mattered more than reaching you.</em>",
     hard: true
   },
   {
@@ -540,7 +599,7 @@ const YEARS = [
     type: "flip",
     mood: "reunite",
     title: "I came to you",
-    message: "Finally, the same city, the same home. <em>Learning how to simply be us.</em>",
+    message: "I came with so much hope. <em>Living together meant growing, the hard way.</em>",
     hard: true
   },
   {
@@ -548,8 +607,8 @@ const YEARS = [
     photo: "assets/2020.jpeg",
     type: "flip",
     mood: "spin",
-    title: "Married, without a second thought",
-    message: "No big plan, no big speech. <em>It just felt like something we already knew.</em>",
+    title: "Married, then we screamed it on a lake",
+    message: "No big plan, no big speech. <em>The next morning, on the bluest water in Lake Louise, I screamed \u201Cwe did it!\u201D</em>",
     hard: false
   },
   {
@@ -558,7 +617,7 @@ const YEARS = [
     type: "flip",
     mood: "bounce",
     title: "Simba",
-    message: "Zero discussion, just \u201Clet's get him.\u201D <em>That's us, in one sentence.</em>",
+    message: "I fell for him the second I saw him. <em>No discussion — suddenly we were his parents.</em>",
     hard: false
   },
   {
@@ -567,25 +626,25 @@ const YEARS = [
     type: "flip",
     mood: "huddle",
     title: "New parents, kind of",
-    message: "A tiny new responsibility softened us. <em>We grew up a little, together.</em>",
+    message: "Tiny barks, him asleep between us every night. <em>Raising him softened us both.</em>",
     hard: true
   },
   {
     year: "2023",
     photo: "assets/2023.jpeg",
     type: "flip",
-    mood: "shake",
-    title: "Married, officially, in chaos",
-    message: "The wedding everyone saw. <em>The hardest year we'd ever face, right behind it.</em>",
-    hard: true
+    mood: "bounce",
+    title: "Falling, rushing, camping — alive",
+    message: "Skydiving, rapids, nights in a cabin in the woods. <em>Money was tight. We still chose to enjoy this life.</em>",
+    hard: false
   },
   {
     year: "2024",
     photo: "assets/2024.jpeg",
     type: "flip",
     mood: "driftapart",
-    title: "Almost let go",
-    message: "We came close to the edge. <em>And chose, quietly, to find our way back.</em>",
+    title: "Most of the year fighting, then a stand",
+    message: "We hurt each other more than we ever had. <em>Then we stopped drifting and grabbed onto each other instead.</em>",
     hard: true
   },
   {
@@ -594,7 +653,7 @@ const YEARS = [
     type: "flip",
     mood: "stillness",
     title: "Quiet storms",
-    message: "A harder year than most. <em>We stayed standing next to each other anyway.</em>",
+    message: "A harder year than most. <em>We didn't say much. We just stayed close.</em>",
     hard: true
   },
   {
@@ -603,20 +662,22 @@ const YEARS = [
     type: "flip",
     mood: "embrace",
     title: "Choosing this, on purpose",
-    message: "Ten years in, and for the first time, <em>we're choosing each other on purpose.</em>",
+    message: "The scare with my health woke something up in both of us. <em>We stopped talking around the hard things — and somehow, that's when we got closer.</em>",
     hard: false
   },
 ];
 
 const LETTER_TEXT = `My love,
 
-Ten years ago I didn't fully understand what I was promising. I just knew I wanted to keep choosing you, every ordinary day, for as long as you'd let me.
+Ten years ago I didn't fully understand what I was promising. I just knew I wanted to be with you.
 
-So I did. Through the easy years and the hard ones, through everything we built and everything we survived — I kept choosing you.
+I stayed through the easy years and the hard ones. But staying isn't the same as losing myself — I learned how to stay and still hold onto who I am.
 
-I still do.
+That's not weakness disguised as love. That's both of us, finally, choosing each other as equals — not because I have no other option, but because I want this, and I know what I'm worth while I choose it.
 
-Here's to the next ten, and the ten after that.`;
+I still choose you. Stronger this time, and so much more myself.
+
+Here's to the next ten, built on that strength.`;
 
 const WEDDING_DATE = null; // e.g. "2020-06-29" to enable the live day-counter
 
@@ -1275,6 +1336,7 @@ YEARS.forEach((y, i) => {
 });
 
 /* flip card interactions with subtle 3D tilt + hearts on open */
+window._cardResets = [];
 YEARS.forEach((y, i) => {
   if (y.type === 'scratch') return;
   const wrap = stopsContainer.querySelector(`.flip-wrap[data-flip="${i}"]`);
@@ -1299,6 +1361,12 @@ YEARS.forEach((y, i) => {
     const rect = wrap.getBoundingClientRect();
     burstHearts(rect.left + rect.width/2, rect.top + rect.height*0.2, 4);
     setTimeout(() => inner.classList.remove('flipped'), 750);
+  });
+
+  window._cardResets.push(() => {
+    flipped = false;
+    inner.classList.remove('flipped');
+    inner.style.transform = 'rotateY(0deg)';
   });
 });
 
@@ -1370,6 +1438,15 @@ YEARS.forEach((y, i) => {
   canvas.addEventListener('touchstart', e => { drawing = true; const p = getPos(e); scratchAt(p.x,p.y); }, {passive:true});
   canvas.addEventListener('touchmove', e => { if(drawing){ const p = getPos(e); scratchAt(p.x,p.y); checkCleared(); } }, {passive:true});
   canvas.addEventListener('touchend', () => drawing = false);
+
+  window._cardResets.push(() => {
+    revealed = false;
+    canvas.style.transition = 'none';
+    canvas.style.opacity = '1';
+    hint.style.opacity = '0.55';
+    sizeCanvas();
+    requestAnimationFrame(() => { canvas.style.transition = 'opacity 0.6s ease'; });
+  });
 });
 
 function drawTrail(){
@@ -1488,7 +1565,6 @@ const envSeal = document.getElementById('envSeal');
 const envelopeHint = document.getElementById('envelopeHint');
 const letterContent = document.getElementById('letterContent');
 let envelopeOpened = false;
-let letterTyped = false;
 
 envelope.addEventListener('click', () => {
   if (envelopeOpened) return;
@@ -1498,33 +1574,60 @@ envelope.addEventListener('click', () => {
   envelopeHint.style.opacity = '0';
   const rect = envelope.getBoundingClientRect();
   burstHearts(rect.left + rect.width/2, rect.top, 5);
+
   setTimeout(() => {
-    letterContent.classList.add('show');
-    if (!letterTyped) { letterTyped = true; typeLetter(); }
+    showWrittenLetter();
   }, 650);
 });
 
-function typeLetter(){
+function showWrittenLetter(){
   const el = document.getElementById('letterText');
   const sign = document.getElementById('letterSign');
-  el.innerHTML = '';
-  sign.classList.remove('show');
-  const text = LETTER_TEXT;
-  let i = 0;
-  const cursor = document.createElement('span');
-  cursor.className = 'cursor';
-  function tick(){
-    if (i <= text.length) {
-      el.textContent = text.slice(0, i);
-      el.appendChild(cursor);
-      i += 2;
-      setTimeout(tick, 14);
-    } else {
-      cursor.remove();
-      sign.classList.add('show');
-    }
+  el.textContent = LETTER_TEXT;
+  letterContent.classList.add('show');
+  setTimeout(() => {
+    letterContent.classList.add('unrolled');
+  }, 200);
+  setTimeout(() => {
+    sign.classList.add('show');
+  }, 1500);
+  setTimeout(() => {
+    startFireflyPopup();
+  }, 2400);
+}
+
+let fireflyStarted = false;
+function startFireflyPopup(){
+  if (fireflyStarted) return;
+  fireflyStarted = true;
+  const popup = document.getElementById('fireflyPopup');
+  const orbit = document.getElementById('fireflyOrbit');
+  popup.classList.add('show');
+
+  const colors = ['#F3C6D8', '#E8C080', '#D4759C'];
+  const flies = [];
+  for (let i = 0; i < 6; i++){
+    const f = document.createElement('div');
+    f.className = 'firefly';
+    const color = colors[i % colors.length];
+    f.style.background = color;
+    f.style.boxShadow = `0 0 10px 3px ${color}`;
+    orbit.appendChild(f);
+    flies.push({ el: f, angle: (Math.PI * 2 * i) / 6, speed: 0.012 + Math.random()*0.01, radius: 70 + Math.random()*30 });
   }
-  tick();
+
+  function animate(){
+    flies.forEach(fly => {
+      fly.angle += fly.speed;
+      const x = 110 + Math.cos(fly.angle) * fly.radius;
+      const y = 70 + Math.sin(fly.angle * 1.3) * (fly.radius * 0.55);
+      fly.el.style.left = x + 'px';
+      fly.el.style.top = y + 'px';
+      fly.el.style.opacity = String(0.5 + Math.abs(Math.sin(fly.angle * 2)) * 0.5);
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
 }
 
 function runCounter(){
@@ -1651,6 +1754,24 @@ function runCelebration(){
 document.getElementById('replayBtn').addEventListener('click', () => {
   celebrationRan = false;
   counterShown = false;
+
+  if (window._cardResets) {
+    window._cardResets.forEach(fn => fn());
+  }
+
+  envelopeOpened = false;
+  envSeal.classList.remove('gone');
+  envFlap.classList.remove('open');
+  envelopeHint.style.opacity = '0.55';
+  letterContent.classList.remove('show', 'unrolled');
+  document.getElementById('letterText').textContent = '';
+  document.getElementById('letterSign').classList.remove('show');
+
+  fireflyStarted = false;
+  const fireflyPopup = document.getElementById('fireflyPopup');
+  fireflyPopup.classList.remove('show');
+  document.getElementById('fireflyOrbit').innerHTML = '';
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
