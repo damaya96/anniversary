@@ -517,7 +517,7 @@ const YEARS = [
   },
   {
     year: "2017",
-    photo: "assets/2017.jpg",
+    photo: "assets/2017.jpeg",
     type: "flip",
     mood: "sidebyside",
     title: "Making a plan together",
@@ -526,7 +526,7 @@ const YEARS = [
   },
   {
     year: "2018",
-    photo: "assets/2018.jpg",
+    photo: "assets/2018.jpeg",
     type: "flip",
     mood: "apart",
     title: "You went first",
@@ -535,7 +535,7 @@ const YEARS = [
   },
   {
     year: "2019",
-    photo: "assets/2019.jpg",
+    photo: "assets/2019.jpeg",
     type: "flip",
     mood: "reunite",
     title: "I came to you",
@@ -544,7 +544,7 @@ const YEARS = [
   },
   {
     year: "2020",
-    photo: "assets/2020.jpg",
+    photo: "assets/2020.jpeg",
     type: "flip",
     mood: "spin",
     title: "Married, without a second thought",
@@ -553,7 +553,7 @@ const YEARS = [
   },
   {
     year: "2021",
-    photo: "assets/2021.jpg",
+    photo: "assets/2021.jpeg",
     type: "flip",
     mood: "bounce",
     title: "Simba",
@@ -562,7 +562,7 @@ const YEARS = [
   },
   {
     year: "2022",
-    photo: "assets/2022.jpg",
+    photo: "assets/2022.jpeg",
     type: "flip",
     mood: "huddle",
     title: "New parents, kind of",
@@ -571,7 +571,7 @@ const YEARS = [
   },
   {
     year: "2023",
-    photo: "assets/2023.jpg",
+    photo: "assets/2023.jpeg",
     type: "flip",
     mood: "shake",
     title: "Married, officially, in chaos",
@@ -580,7 +580,7 @@ const YEARS = [
   },
   {
     year: "2024",
-    photo: "assets/2024.jpg",
+    photo: "assets/2024.jpeg",
     type: "flip",
     mood: "driftapart",
     title: "Almost let go",
@@ -589,7 +589,7 @@ const YEARS = [
   },
   {
     year: "2025",
-    photo: "assets/2025.jpg",
+    photo: "assets/2025.jpeg",
     type: "flip",
     mood: "stillness",
     title: "Quiet storms",
@@ -598,7 +598,7 @@ const YEARS = [
   },
   {
     year: "2026",
-    photo: "assets/2026.jpg",
+    photo: "assets/2026.jpeg",
     type: "flip",
     mood: "embrace",
     title: "Choosing this, on purpose",
@@ -1234,7 +1234,7 @@ const stopEls = YEARS.map((y, i) => {
     bodyHTML = `
       <div class="cat-stage" data-stage="${i}"></div>
       <div class="scratch-wrap">
-        <div class="scratch-under" style="${y.photo ? `background-image:linear-gradient(180deg, rgba(50,28,48,0.55), rgba(50,28,48,0.75)), url('${y.photo}'); background-size:cover; background-position:center;` : ''}">${y.reveal.replace(/\n/g, '<br><br>')}</div>
+        <div class="scratch-under" style="${y.photo ? `background-image:linear-gradient(180deg, rgba(50,28,48,0.55), rgba(50,28,48,0.75)), url('${y.photo}'); background-size:cover; background-position:center; background-repeat:no-repeat;` : ''}">${y.reveal.replace(/\n/g, '<br><br>')}</div>
         <canvas class="scratch-canvas" data-index="${i}"></canvas>
       </div>
       <div class="scratch-hint" data-hint="${i}">scratch the gold to see what you said</div>
