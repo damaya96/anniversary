@@ -233,12 +233,23 @@
     display: flex; align-items: center; justify-content: center; flex-direction: column;
     gap: 10px; padding: 1.3rem; box-shadow: 0 24px 48px -18px rgba(0,0,0,0.55);
   }
-  .flip-front{ background: linear-gradient(155deg, #3A1F42 0%, #1E0F26 100%); border: 1px solid rgba(255,248,250,0.14); }
+  .flip-front{ background: linear-gradient(155deg, #3A1F42 0%, #1E0F26 100%); border: 1px solid rgba(255,248,250,0.14); position: relative; overflow: hidden; }
   .flip-front .photo-placeholder{
     font-family: 'Cormorant', serif; font-style: italic; font-size: 12px; color: var(--cream-dim);
     opacity: 0.55; text-align: center; line-height: 1.5;
   }
-  .flip-front .tap-cue{ font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sage); margin-top: 6px; }
+  .flip-photo{
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    border-radius: 18px;
+  }
+  .flip-front .tap-cue{
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sage); margin-top: 6px;
+  }
+  .flip-front:has(.flip-photo) .tap-cue{
+    position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; z-index: 2;
+    color: var(--cream); text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    padding: 10px 0 0; background: linear-gradient(180deg, transparent, rgba(20,8,18,0.75) 60%);
+  }
   .flip-back{ background: linear-gradient(155deg, var(--wine) 0%, var(--wine-deep) 100%); transform: rotateY(180deg); text-align: center; }
   .flip-back.hard{ background: linear-gradient(155deg, #5A3450 0%, #321C30 100%); }
   .flip-back p{ font-family: 'Cormorant Garamond', serif; font-size: clamp(14px, 1.9vw, 16px); line-height: 1.6; color: var(--cream); }
@@ -495,6 +506,7 @@ if (sessionStorage.getItem('gate-unlocked') === '1') {
 const YEARS = [
   {
     year: "2016",
+    photo: "assets/2016.jpg",
     type: "scratch",
     mood: "spark",
     title: "Where it started",
@@ -505,6 +517,7 @@ const YEARS = [
   },
   {
     year: "2017",
+    photo: "assets/2017.jpg",
     type: "flip",
     mood: "sidebyside",
     title: "Making a plan together",
@@ -513,6 +526,7 @@ const YEARS = [
   },
   {
     year: "2018",
+    photo: "assets/2018.jpg",
     type: "flip",
     mood: "apart",
     title: "You went first",
@@ -521,6 +535,7 @@ const YEARS = [
   },
   {
     year: "2019",
+    photo: "assets/2019.jpg",
     type: "flip",
     mood: "reunite",
     title: "I came to you",
@@ -529,6 +544,7 @@ const YEARS = [
   },
   {
     year: "2020",
+    photo: "assets/2020.jpg",
     type: "flip",
     mood: "spin",
     title: "Married, without a second thought",
@@ -537,6 +553,7 @@ const YEARS = [
   },
   {
     year: "2021",
+    photo: "assets/2021.jpg",
     type: "flip",
     mood: "bounce",
     title: "Simba",
@@ -545,6 +562,7 @@ const YEARS = [
   },
   {
     year: "2022",
+    photo: "assets/2022.jpg",
     type: "flip",
     mood: "huddle",
     title: "New parents, kind of",
@@ -553,6 +571,7 @@ const YEARS = [
   },
   {
     year: "2023",
+    photo: "assets/2023.jpg",
     type: "flip",
     mood: "shake",
     title: "Married, officially, in chaos",
@@ -561,6 +580,7 @@ const YEARS = [
   },
   {
     year: "2024",
+    photo: "assets/2024.jpg",
     type: "flip",
     mood: "driftapart",
     title: "Almost let go",
@@ -569,6 +589,7 @@ const YEARS = [
   },
   {
     year: "2025",
+    photo: "assets/2025.jpg",
     type: "flip",
     mood: "stillness",
     title: "Quiet storms",
@@ -577,6 +598,7 @@ const YEARS = [
   },
   {
     year: "2026",
+    photo: "assets/2026.jpg",
     type: "flip",
     mood: "embrace",
     title: "Choosing this, on purpose",
@@ -1212,7 +1234,7 @@ const stopEls = YEARS.map((y, i) => {
     bodyHTML = `
       <div class="cat-stage" data-stage="${i}"></div>
       <div class="scratch-wrap">
-        <div class="scratch-under">${y.reveal.replace(/\n/g, '<br><br>')}</div>
+        <div class="scratch-under" style="${y.photo ? `background-image:linear-gradient(180deg, rgba(50,28,48,0.55), rgba(50,28,48,0.75)), url('${y.photo}'); background-size:cover; background-position:center;` : ''}">${y.reveal.replace(/\n/g, '<br><br>')}</div>
         <canvas class="scratch-canvas" data-index="${i}"></canvas>
       </div>
       <div class="scratch-hint" data-hint="${i}">scratch the gold to see what you said</div>
@@ -1223,7 +1245,7 @@ const stopEls = YEARS.map((y, i) => {
       <div class="flip-wrap" data-flip="${i}">
         <div class="flip-inner" id="flipInner${i}">
           <div class="flip-face flip-front">
-            <div class="photo-placeholder">photo from<br>${y.year.toLowerCase()}<br>goes here</div>
+            ${y.photo ? `<img src="${y.photo}" alt="${y.year}" class="flip-photo">` : `<div class="photo-placeholder">photo from<br>${y.year.toLowerCase()}<br>goes here</div>`}
             <div class="tap-cue">tap to open</div>
           </div>
           <div class="flip-face flip-back${y.hard ? ' hard' : ''}">
