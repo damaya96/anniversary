@@ -1661,6 +1661,10 @@ function showWrittenLetter(){
   letterContent.classList.add('show');
   setTimeout(() => {
     letterContent.classList.add('unrolled');
+    const card = document.getElementById('letterCard');
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }, 200);
   setTimeout(() => {
     sign.classList.add('show');
