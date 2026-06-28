@@ -1399,7 +1399,7 @@ const stopEls = YEARS.map((y, i) => {
   } else {
     const videoUpper = y.video ? y.video.replace(/\.mp4$/i, '.MP4') : '';
     const mediaHTML = y.video
-      ? `<video class="media-fill" data-fallback="${videoUpper}" data-photo="${y.photo || ''}" data-year="${y.year}" src="${y.video}" poster="${y.photo || ''}" style="background-image:url('${y.photo || ''}'); background-size:cover; background-position:center;" preload="none" muted playsinline loop onerror="handleVideoError(this)"></video>`
+      ? `<video class="media-fill" data-fallback="${videoUpper}" data-photo="${y.photo || ''}" data-year="${y.year}" src="${y.video}" poster="${y.photo || ''}" style="background-image:url('${y.photo || ''}'); background-size:cover; background-position:center;" preload="auto" muted playsinline loop onerror="handleVideoError(this)"></video>`
       : (y.photo
         ? `<img src="${y.photo}" alt="${y.year}" class="media-fill">`
         : `<div class="photo-placeholder">photo from<br>${y.year.toLowerCase()}<br>goes here</div>`);
@@ -1587,14 +1587,6 @@ const stopObserver = new IntersectionObserver((entries) => {
       }
       if (video) {
         video.play().catch(() => {});
-      }
-      const nextIdx = Number(idx) + 1;
-      const nextStop = stopEls[nextIdx];
-      if (nextStop) {
-        const nextVideo = nextStop.querySelector('video.media-fill');
-        if (nextVideo && nextVideo.preload !== 'auto') {
-          nextVideo.preload = 'auto';
-        }
       }
     } else if (video && !video.paused) {
       video.pause();
