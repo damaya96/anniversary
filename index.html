@@ -236,12 +236,9 @@
     opacity: 0.55; text-align: center; line-height: 1.5; padding: 1.3rem;
   }
   .media-fill{
-    position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain;
+    position: absolute; left: 0; top: -8%; width: 100%; height: 116%; object-fit: cover;
     image-orientation: from-image;
     will-change: transform;
-  }
-  .media-fill.is-photo{
-    top: -8%; height: 116%; object-fit: cover;
   }
   .media-message{
     position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
@@ -713,7 +710,7 @@ function handleVideoError(video){
     const img = document.createElement('img');
     img.src = photo;
     img.alt = year;
-    img.className = 'media-fill is-photo';
+    img.className = 'media-fill';
     video.replaceWith(img);
   }
 }
@@ -1404,7 +1401,7 @@ const stopEls = YEARS.map((y, i) => {
     const mediaHTML = y.video
       ? `<video class="media-fill" data-fallback="${videoUpper}" data-photo="${y.photo || ''}" data-year="${y.year}" src="${y.video}" poster="${y.photo || ''}" autoplay loop muted playsinline onerror="handleVideoError(this)"></video>`
       : (y.photo
-        ? `<img src="${y.photo}" alt="${y.year}" class="media-fill is-photo">`
+        ? `<img src="${y.photo}" alt="${y.year}" class="media-fill">`
         : `<div class="photo-placeholder">photo from<br>${y.year.toLowerCase()}<br>goes here</div>`);
     bodyHTML = `
       <div class="cat-stage" data-stage="${i}"></div>
@@ -1618,7 +1615,7 @@ let parallaxScheduled = false;
 function updateMediaParallax(){
   const vh = window.innerHeight;
   const vCenter = vh / 2;
-  const liveMediaEls = document.querySelectorAll('.media-fill.is-photo');
+  const liveMediaEls = document.querySelectorAll('.media-fill');
   liveMediaEls.forEach(el => {
     if (!el.isConnected || !el.parentElement) return;
     const rect = el.parentElement.getBoundingClientRect();
