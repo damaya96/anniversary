@@ -173,6 +173,7 @@
   .stop{
     position: relative; z-index: 1; margin-bottom: 32vh;
     opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s ease;
+    scroll-margin-top: 9vh;
   }
   .stop:last-of-type{ margin-bottom: 28vh; }
   .stop.revealed{ opacity: 1; transform: translateY(0); }
@@ -218,12 +219,13 @@
   .cpillar.flip{ flex-direction: row-reverse; }
   .cseg{ border-radius: 50%; transform-origin: bottom center; transition: transform 0.5s ease-in-out; }
   .chead{ border-radius: 50%; position: relative; }
+  .chead .face-wrap{ position: absolute; inset: 0; border-radius: 50%; overflow: hidden; }
   .chead .eye{ position: absolute; width: 5px; height: 6px; border-radius: 50%; background: #2A1A30; }
   .chead .smile{ position: absolute; border-bottom: 2px solid; border-radius: 0 0 14px 14px; }
 
   /* -------- 3D flip card -------- */
   .media-card{
-    width: min(78vw, 280px); height: min(78vw, 320px); max-height: 360px;
+    width: min(88vw, 360px); height: min(88vw, 360px); max-height: 400px;
     margin: 0 auto; border-radius: 18px; position: relative; overflow: hidden;
     background: linear-gradient(155deg, #3A1F42 0%, #1E0F26 100%); border: 1px solid rgba(255,248,250,0.14);
     box-shadow: 0 24px 48px -18px rgba(0,0,0,0.55);
@@ -429,7 +431,7 @@
   .sound-toggle:hover{ opacity: 1; }
 
   @media (max-width: 480px){
-    .media-card{ width: 76vw; height: 300px; }
+    .media-card{ width: 86vw; height: 86vw; max-height: 380px; }
   }
 </style>
 </head>
@@ -690,6 +692,29 @@ const soundToggle = document.getElementById('soundToggle');
 const heartLayer = document.getElementById('heartLayer');
 
 /* -------- 3D rose-red hearts -------- */
+/* -------- video case-mismatch fallback --------
+   GitHub Pages serves files from a case-sensitive filesystem. If a video
+   was uploaded as "2022.MP4" but the code asks for "assets/2022.mp4",
+   the lowercase request 404s. This retries the uppercase ".MP4" variant
+   once before finally giving up and showing the photo instead. */
+function handleVideoError(video){
+  const triedUpper = video.dataset.triedUpper;
+  if (!triedUpper && video.dataset.fallback) {
+    video.dataset.triedUpper = '1';
+    video.src = video.dataset.fallback;
+    return;
+  }
+  const photo = video.dataset.photo;
+  const year = video.dataset.year;
+  if (photo) {
+    const img = document.createElement('img');
+    img.src = photo;
+    img.alt = year;
+    img.className = 'media-fill';
+    video.replaceWith(img);
+  }
+}
+
 function popHeart(x, y, opts){
   opts = opts || {};
   const size = opts.size || (22 + Math.random()*16);
@@ -790,31 +815,31 @@ function makeSeg(c1, c2, w){
 
 /* expressions: 'happy', 'content', 'longing', 'nervous', 'strained', 'quiet' */
 function faceSVG(eyeColor, mouthColor, expression, eyeSide){
-  const ex = eyeSide === 'r' ? 24 : 11;
-  const ex2 = ex + 9;
+  const ex = eyeSide === 'r' ? 23 : 12;
+  const ex2 = ex + 7;
   const blush = '#F3C6D8';
   if (expression === 'happy') {
-    return `<circle cx="${ex}" cy="15" r="3.2" fill="${eyeColor}"/><circle cx="${ex2}" cy="15" r="3.2" fill="${eyeColor}"/>
-      <path d="M${ex-3} 22 Q${(ex+ex2)/2} 31 ${ex2+3} 22" stroke="${mouthColor}" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <circle cx="${ex-5}" cy="20" r="3" fill="${blush}" opacity="0.45"/><circle cx="${ex2+5}" cy="20" r="3" fill="${blush}" opacity="0.45"/>`;
+    return `<circle cx="${ex}" cy="16" r="2.8" fill="${eyeColor}"/><circle cx="${ex2}" cy="16" r="2.8" fill="${eyeColor}"/>
+      <path d="M${ex-2} 22 Q${(ex+ex2)/2} 28 ${ex2+2} 22" stroke="${mouthColor}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <circle cx="${ex-4}" cy="20" r="2.4" fill="${blush}" opacity="0.45"/><circle cx="${ex2+4}" cy="20" r="2.4" fill="${blush}" opacity="0.45"/>`;
   } else if (expression === 'content') {
-    return `<circle cx="${ex}" cy="15" r="3" fill="${eyeColor}"/><circle cx="${ex2}" cy="15" r="3" fill="${eyeColor}"/>
-      <path d="M${ex-2} 23 Q${(ex+ex2)/2} 26 ${ex2+2} 23" stroke="${mouthColor}" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+    return `<circle cx="${ex}" cy="16" r="2.6" fill="${eyeColor}"/><circle cx="${ex2}" cy="16" r="2.6" fill="${eyeColor}"/>
+      <path d="M${ex-1.5} 22 Q${(ex+ex2)/2} 24.5 ${ex2+1.5} 22" stroke="${mouthColor}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
   } else if (expression === 'longing') {
-    return `<circle cx="${ex}" cy="16" r="3" fill="${eyeColor}"/><circle cx="${ex2}" cy="16" r="3" fill="${eyeColor}"/>
-      <path d="M${ex-3} 25 Q${(ex+ex2)/2} 21 ${ex2+3} 25" stroke="${mouthColor}" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-      <path d="M${ex-5} 10 Q${ex-1} 7 ${ex+3} 9" stroke="${mouthColor}" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.7"/>`;
+    return `<circle cx="${ex}" cy="17" r="2.6" fill="${eyeColor}"/><circle cx="${ex2}" cy="17" r="2.6" fill="${eyeColor}"/>
+      <path d="M${ex-2} 24 Q${(ex+ex2)/2} 21 ${ex2+2} 24" stroke="${mouthColor}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M${ex-3} 12 Q${ex} 10 ${ex+3} 11.5" stroke="${mouthColor}" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>`;
   } else if (expression === 'nervous') {
-    return `<circle cx="${ex}" cy="15" r="3" fill="${eyeColor}"/><circle cx="${ex2}" cy="15" r="3" fill="${eyeColor}"/>
-      <path d="M${ex-3} 14 Q${(ex+ex2)/2} 17 ${ex2+3} 14" stroke="${mouthColor}" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.6"/>
-      <ellipse cx="${(ex+ex2)/2}" cy="24" rx="3.4" ry="2.6" fill="${mouthColor}" opacity="0.7"/>`;
+    return `<circle cx="${ex}" cy="16" r="2.6" fill="${eyeColor}"/><circle cx="${ex2}" cy="16" r="2.6" fill="${eyeColor}"/>
+      <path d="M${ex-2} 15.5 Q${(ex+ex2)/2} 17.5 ${ex2+2} 15.5" stroke="${mouthColor}" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <ellipse cx="${(ex+ex2)/2}" cy="23" rx="2.8" ry="2.2" fill="${mouthColor}" opacity="0.7"/>`;
   } else if (expression === 'strained') {
-    return `<path d="M${ex-3} 13 L${ex+3} 17 M${ex-3} 17 L${ex+3} 13" stroke="${eyeColor}" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M${ex2-3} 13 L${ex2+3} 17 M${ex2-3} 17 L${ex2+3} 13" stroke="${eyeColor}" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M${ex-2} 26 Q${(ex+ex2)/2} 22 ${ex2+2} 26" stroke="${mouthColor}" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+    return `<path d="M${ex-2} 14 L${ex+2} 17 M${ex-2} 17 L${ex+2} 14" stroke="${eyeColor}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M${ex2-2} 14 L${ex2+2} 17 M${ex2-2} 17 L${ex2+2} 14" stroke="${eyeColor}" stroke-width="2" stroke-linecap="round"/>
+      <path d="M${ex-1.5} 25 Q${(ex+ex2)/2} 22 ${ex2+1.5} 25" stroke="${mouthColor}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
   } else {
-    return `<circle cx="${ex}" cy="15" r="3" fill="${eyeColor}"/><circle cx="${ex2}" cy="15" r="3" fill="${eyeColor}"/>
-      <line x1="${ex-2}" y1="24" x2="${ex2+2}" y2="24" stroke="${mouthColor}" stroke-width="2.8" stroke-linecap="round"/>`;
+    return `<circle cx="${ex}" cy="16" r="2.6" fill="${eyeColor}"/><circle cx="${ex2}" cy="16" r="2.6" fill="${eyeColor}"/>
+      <line x1="${ex-1.5}" y1="23" x2="${ex2+1.5}" y2="23" stroke="${mouthColor}" stroke-width="2.4" stroke-linecap="round"/>`;
   }
 }
 
@@ -837,7 +862,10 @@ function makeHead(headColor, eyeSide, expression){
   faceSvg.style.position = 'absolute';
   faceSvg.style.left = '0'; faceSvg.style.top = '0';
   faceSvg.innerHTML = faceSVG(eyeColor, mouthColor, expression || 'content', eyeSide);
-  head.appendChild(faceSvg);
+  const faceWrap = document.createElement('div');
+  faceWrap.className = 'face-wrap';
+  faceWrap.appendChild(faceSvg);
+  head.appendChild(faceWrap);
 
   /* visible black stick arm, angled outward like a little wave */
   const arm = document.createElement('div');
@@ -1369,8 +1397,9 @@ const stopEls = YEARS.map((y, i) => {
       <div class="scratch-hint" data-hint="${i}">scratch the gold to see what you said</div>
     `;
   } else {
+    const videoUpper = y.video ? y.video.replace(/\.mp4$/i, '.MP4') : '';
     const mediaHTML = y.video
-      ? `<video class="media-fill" src="${y.video}" poster="${y.photo || ''}" autoplay loop muted playsinline onerror="this.outerHTML='<img src=\\'${y.photo}\\' alt=\\'${y.year}\\' class=\\'media-fill\\'>'"></video>`
+      ? `<video class="media-fill" data-fallback="${videoUpper}" data-photo="${y.photo || ''}" data-year="${y.year}" src="${y.video}" poster="${y.photo || ''}" autoplay loop muted playsinline onerror="handleVideoError(this)"></video>`
       : (y.photo
         ? `<img src="${y.photo}" alt="${y.year}" class="media-fill">`
         : `<div class="photo-placeholder">photo from<br>${y.year.toLowerCase()}<br>goes here</div>`);
