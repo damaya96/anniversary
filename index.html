@@ -569,7 +569,7 @@ const YEARS = [
     video: "assets/2017.mp4",
     type: "flip",
     mood: "sidebyside",
-    title: "Making a plan together",
+    title: "Saying yes to somewhere new",
     message: "You wanted to build a life abroad. <em>I just wanted to build it with you.</em>",
     hard: false
   },
@@ -579,7 +579,7 @@ const YEARS = [
     video: "assets/2018.mp4",
     type: "flip",
     mood: "apart",
-    title: "You went first",
+    title: "Across the distance",
     message: "I missed you so much. <em>But nothing mattered more than reaching you.</em>",
     hard: true
   },
@@ -589,7 +589,7 @@ const YEARS = [
     video: "assets/2019.mp4",
     type: "flip",
     mood: "reunite",
-    title: "I came to you",
+    title: "Following you",
     message: "I came with so much hope. <em>Living together meant growing, the hard way.</em>",
     hard: true
   },
@@ -609,7 +609,7 @@ const YEARS = [
     video: "assets/2021.mp4",
     type: "flip",
     mood: "bounce",
-    title: "Simba",
+    title: "Tiny, and suddenly ours",
     message: "Zero discussion, just \u201Clet's get him.\u201D <em>That's us, in one sentence.</em>",
     hard: false
   },
@@ -619,7 +619,7 @@ const YEARS = [
     video: "assets/2022.mp4",
     type: "flip",
     mood: "huddle",
-    title: "New parents, kind of",
+    title: "He healed something he never knew was broken",
     message: "A tiny new responsibility softened us. <em>We grew up a little, together.</em>",
     hard: true
   },
@@ -629,7 +629,7 @@ const YEARS = [
     video: "assets/2023.mp4",
     type: "flip",
     mood: "leap",
-    title: "Falling, rushing, camping — alive",
+    title: "Jumping anyway",
     message: "Our wallets were empty. <em>Our courage wasn't. We lived loud anyway.</em>",
     hard: false
   },
@@ -639,7 +639,7 @@ const YEARS = [
     video: "assets/2024.mp4",
     type: "flip",
     mood: "driftapart",
-    title: "Most of the year fighting, then a stand",
+    title: "Choosing to stay",
     message: "We hurt each other more than we ever had. <em>Then we stopped drifting and grabbed onto each other instead.</em>",
     hard: true
   },
@@ -649,7 +649,7 @@ const YEARS = [
     video: "assets/2025.mp4",
     type: "flip",
     mood: "stillness",
-    title: "Quiet storms",
+    title: "What we didn't say",
     message: "A harder year than most. <em>We didn't say much. We just stayed close.</em>",
     hard: true
   },
@@ -659,7 +659,7 @@ const YEARS = [
     video: "assets/2026.mp4",
     type: "flip",
     mood: "embrace",
-    title: "Choosing this, on purpose",
+    title: "Still here, still us",
     message: "The health scare shocked us more than we admitted. <em>Ten years in, and for the first time, we're choosing each other on purpose.</em>",
     hard: false
   },
@@ -1587,6 +1587,14 @@ const stopObserver = new IntersectionObserver((entries) => {
       }
       if (video) {
         video.play().catch(() => {});
+      }
+      const nextIdx = Number(idx) + 1;
+      const nextStop = stopEls[nextIdx];
+      if (nextStop) {
+        const nextVideo = nextStop.querySelector('video.media-fill');
+        if (nextVideo && nextVideo.preload !== 'auto') {
+          nextVideo.preload = 'auto';
+        }
       }
     } else if (video && !video.paused) {
       video.pause();
