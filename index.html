@@ -515,7 +515,7 @@
 /* =========================================================
    PASSWORD GATE — set your real word before sharing the link.
    ========================================================= */
-const GATE_PASSWORD = "fuckyouhard"; // <-- set this before sharing
+const GATE_PASSWORD = "changeme"; // <-- set this before sharing
 
 const gate = document.getElementById('gate');
 const gateInput = document.getElementById('gateInput');
@@ -1399,7 +1399,7 @@ const stopEls = YEARS.map((y, i) => {
   } else {
     const videoUpper = y.video ? y.video.replace(/\.mp4$/i, '.MP4') : '';
     const mediaHTML = y.video
-      ? `<video class="media-fill" data-fallback="${videoUpper}" data-photo="${y.photo || ''}" data-year="${y.year}" src="${y.video}" poster="${y.photo || ''}" autoplay loop muted playsinline onerror="handleVideoError(this)"></video>`
+      ? `<video class="media-fill" data-fallback="${videoUpper}" data-photo="${y.photo || ''}" data-year="${y.year}" src="${y.video}" poster="${y.photo || ''}" preload="none" muted playsinline loop onerror="handleVideoError(this)"></video>`
       : (y.photo
         ? `<img src="${y.photo}" alt="${y.year}" class="media-fill">`
         : `<div class="photo-placeholder">photo from<br>${y.year.toLowerCase()}<br>goes here</div>`);
@@ -1576,6 +1576,7 @@ function drawTrail(){
 
 const stopObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
+    const video = entry.target.querySelector('video.media-fill');
     if (entry.isIntersecting) {
       entry.target.classList.add('revealed');
       updateGlowForScroll();
@@ -1584,6 +1585,11 @@ const stopObserver = new IntersectionObserver((entries) => {
       if (stage && stage.lookDown) {
         setTimeout(() => stage.lookDown(), 500);
       }
+      if (video) {
+        video.play().catch(() => {});
+      }
+    } else if (video && !video.paused) {
+      video.pause();
     }
   });
 }, { threshold: 0.32 });
