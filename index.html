@@ -1112,6 +1112,8 @@ function mountCaterpillars(stage, mood){
     popRing();
     const ringInterval = setInterval(popRing, 4200);
     cleanupFns.push(() => clearInterval(ringInterval));
+    stage.style.cursor = 'pointer';
+    stage.addEventListener('click', popRing);
 
   } else if (mood === 'bounce') {
     /* 2021 — playful bounce, tiny Simba caterpillar joins between them, always happy */
@@ -1145,6 +1147,31 @@ function mountCaterpillars(stage, mood){
       requestAnimationFrame(animateSimba);
     }
     animateSimba();
+
+    simba.style.cursor = 'pointer';
+    simba.addEventListener('click', (e) => {
+      e.stopPropagation();
+      simba.style.transition = 'transform 0.35s cubic-bezier(0.34,1.8,0.5,1)';
+      simba.style.transform = 'translateX(-50%) scale(0.95)';
+      setTimeout(() => { simba.style.transform = 'translateX(-50%) scale(0.7)'; }, 350);
+      const woof = document.createElement('div');
+      woof.textContent = 'woof!';
+      woof.style.position = 'absolute';
+      woof.style.left = '50%'; woof.style.top = '-12px';
+      woof.style.transform = 'translateX(-50%) scale(0.5)';
+      woof.style.opacity = '0';
+      woof.style.fontFamily = "'Cormorant Garamond', serif";
+      woof.style.fontStyle = 'italic';
+      woof.style.fontSize = '13px';
+      woof.style.color = '#F0D8A8';
+      woof.style.transition = 'opacity 0.3s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+      simba.appendChild(woof);
+      requestAnimationFrame(() => { woof.style.opacity = '1'; woof.style.transform = 'translateX(-50%) translateY(-10px) scale(1)'; });
+      setTimeout(() => { woof.style.opacity = '0'; }, 900);
+      setTimeout(() => woof.remove(), 1300);
+      const rect = stage.getBoundingClientRect();
+      burstHearts(rect.left + rect.width/2, rect.top + rect.height*0.5, 3);
+    });
 
   } else if (mood === 'leap') {
     /* 2023 — freefall/adventure energy: quick drops and recoveries, like skydiving, no Simba here */
@@ -1211,6 +1238,17 @@ function mountCaterpillars(stage, mood){
     }
     pulseSwaddle();
     cleanupFns.push(() => cancelAnimationFrame(swaddleRaf));
+
+    stage.style.cursor = 'pointer';
+    stage.addEventListener('click', () => {
+      swaddle.style.transition = 'background 0.4s ease';
+      swaddle.style.background = 'radial-gradient(ellipse, rgba(243,198,216,0.55), transparent 78%)';
+      setTimeout(() => {
+        swaddle.style.background = 'radial-gradient(ellipse, rgba(232,192,128,0.28), transparent 75%)';
+      }, 900);
+      const rect = stage.getBoundingClientRect();
+      burstHearts(rect.left + rect.width/2, rect.top + rect.height*0.5, 3);
+    });
 
   } else if (mood === 'shake') {
     c1.style.left = '26%';
@@ -1282,6 +1320,13 @@ function mountCaterpillars(stage, mood){
     }
     animate();
 
+    stage.style.cursor = 'pointer';
+    stage.addEventListener('click', () => {
+      phase = 1;
+      c1.style.left = '30%'; c2.style.left = '56%';
+      popHugHeart();
+    });
+
   } else if (mood === 'stillness') {
     c1.style.left = '26%';
     c2.style.left = '60%';
@@ -1349,6 +1394,9 @@ function mountCaterpillars(stage, mood){
       raf = requestAnimationFrame(animate);
     }
     animate();
+
+    stage.style.cursor = 'pointer';
+    stage.addEventListener('click', popKissHearts);
 
   } else {
     c1.style.left = '26%';
