@@ -318,14 +318,29 @@
   }
   .env-flap.open{ transform: rotateX(180deg); }
   .env-seal{
-    position: absolute; left: 50%; top: 12px; width: 34px; height: 34px;
-    background: radial-gradient(circle at 32% 28%, #F3D29A, var(--gold) 70%);
+    position: absolute; left: 50%; top: 12px; width: 38px; height: 38px;
+    background: radial-gradient(circle at 35% 25%, #FFE8B0 0%, #E8C080 35%, #C9963F 70%, #9A7228 100%);
     border-radius: 50%; transform: translate(-50%, -50%); z-index: 4;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;
+    box-shadow:
+      0 4px 10px rgba(0,0,0,0.5),
+      inset 0 2px 3px rgba(255,250,225,0.7),
+      inset 0 -3px 4px rgba(110,75,20,0.55);
+    display: flex; align-items: center; justify-content: center;
     transition: opacity 0.3s ease, transform 0.3s ease;
   }
+  .env-seal::before{
+    content: '';
+    position: absolute; inset: 3px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,250,225,0.4);
+  }
   .env-seal.gone{ opacity: 0; transform: translate(-50%,-50%) scale(0.4); }
-  .env-seal-mark{ font-size: 15px; color: #6B3A10; }
+  .env-seal-mark{
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
+    font-size: 10px; color: #6B4515; line-height: 1.05; text-align: center;
+    text-shadow: 0 1px 0 rgba(255,250,225,0.5);
+    letter-spacing: 0.02em;
+  }
   .env-label{ position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; }
   .env-label span{ font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: #FBE0E5; }
   .envelope-hint{
@@ -490,7 +505,7 @@
       <div class="env-shadow-tri"></div>
       <div class="env-label"><span>one more thing, love</span></div>
       <div class="env-flap" id="envFlap"></div>
-      <div class="env-seal" id="envSeal"><span class="env-seal-mark">🔒</span></div>
+      <div class="env-seal" id="envSeal"><span class="env-seal-mark">kenny<br>baby</span></div>
     </div>
     <div class="envelope-hint" id="envelopeHint">tap to open</div>
   </div>
