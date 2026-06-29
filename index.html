@@ -318,7 +318,7 @@
   }
   .env-flap.open{ transform: rotateX(180deg); }
   .env-seal{
-    position: absolute; left: 50%; top: 0; width: 34px; height: 34px;
+    position: absolute; left: 50%; top: 12px; width: 34px; height: 34px;
     background: radial-gradient(circle at 32% 28%, #F3D29A, var(--gold) 70%);
     border-radius: 50%; transform: translate(-50%, -50%); z-index: 4;
     box-shadow: 0 3px 8px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;
@@ -328,7 +328,15 @@
   .env-seal-mark{ font-size: 15px; color: #6B3A10; }
   .env-label{ position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1; }
   .env-label span{ font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: #FBE0E5; }
-  .envelope-hint{ margin-top: 18px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cream-dim); opacity: 0.55; }
+  .envelope-hint{
+    margin-top: 18px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.85; font-weight: 500;
+    animation: hint-pulse 2s ease-in-out infinite;
+  }
+  @keyframes hint-pulse{
+    0%, 100%{ opacity: 0.55; transform: scale(1); }
+    50%{ opacity: 1; transform: scale(1.05); }
+  }
 
   .letter-content{
     margin-top: 2vh; margin-bottom: 26vh; min-height: 60vh;
@@ -792,7 +800,7 @@ function startAmbientHearts(){
 }
 document.addEventListener('click', (e) => {
   if (e.target.closest('#gate')) return;
-  burstHearts(e.clientX, e.clientY, 2);
+  burstHearts(e.clientX, e.clientY, 5);
 }, true);
 
 /* -------- 3D smiley caterpillars, cuter & bigger-headed, with visible stick arms -------- */
@@ -1439,7 +1447,7 @@ YEARS.forEach((y, i) => {
   if (!card) return;
   card.addEventListener('click', () => {
     const rect = card.getBoundingClientRect();
-    burstHearts(rect.left + rect.width/2, rect.top + rect.height*0.3, 4);
+    burstHearts(rect.left + rect.width/2, rect.top + rect.height*0.3, 7);
   });
 });
 
@@ -1681,6 +1689,7 @@ envelope.addEventListener('click', () => {
   envSeal.classList.add('gone');
   setTimeout(() => { envFlap.classList.add('open'); }, 150);
   envelopeHint.style.opacity = '0';
+  envelopeHint.style.animation = 'none';
   const rect = envelope.getBoundingClientRect();
   burstHearts(rect.left + rect.width/2, rect.top, 5);
 
@@ -1881,6 +1890,7 @@ document.getElementById('replayBtn').addEventListener('click', () => {
   envSeal.classList.remove('gone');
   envFlap.classList.remove('open');
   envelopeHint.style.opacity = '0.55';
+  envelopeHint.style.animation = '';
   letterContent.classList.remove('show', 'unrolled');
   document.getElementById('letterText').textContent = '';
   document.getElementById('letterSign').classList.remove('show');
